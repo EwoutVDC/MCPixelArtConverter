@@ -1,6 +1,6 @@
 ﻿namespace MCPixelArtConverter
 {
-    partial class MCPACMainForm
+    partial class MCTextureShower
     {
         /// <summary>
         /// Required designer variable.
@@ -28,34 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.LoadBlockInfoButton = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // LoadBlockInfoButton
+            // pictureBox1
             // 
-            this.LoadBlockInfoButton.Location = new System.Drawing.Point(13, 13);
-            this.LoadBlockInfoButton.Name = "LoadBlockInfoButton";
-            this.LoadBlockInfoButton.Size = new System.Drawing.Size(93, 23);
-            this.LoadBlockInfoButton.TabIndex = 0;
-            this.LoadBlockInfoButton.Text = "Load block info";
-            this.LoadBlockInfoButton.UseVisualStyleBackColor = true;
-            this.LoadBlockInfoButton.Click += new System.EventHandler(this.LoadBlockInfoButton_Click);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(260, 237);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
-            // MCPACMainForm
+            // MCTextureShower
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 510);
-            this.Controls.Add(this.LoadBlockInfoButton);
-            this.Name = "MCPACMainForm";
-            this.Text = "MC Pixel Art Converter";
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.pictureBox1);
+            this.Name = "MCTextureShower";
+            this.Text = "MCTextureShower";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button LoadBlockInfoButton;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
-
