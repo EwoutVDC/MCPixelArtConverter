@@ -35,7 +35,15 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.btnLoadPicture = new System.Windows.Forms.Button();
             this.btnConvert = new System.Windows.Forms.Button();
+            this.txtHeigth = new System.Windows.Forms.TextBox();
+            this.txtWidth = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.scaleTrackBar = new System.Windows.Forms.TrackBar();
+            this.lblScaleValue = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // LoadBlockInfoButton
@@ -77,9 +85,9 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(16, 87);
+            this.pictureBox.Location = new System.Drawing.Point(16, 110);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(650, 411);
+            this.pictureBox.Size = new System.Drawing.Size(561, 388);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 4;
             this.pictureBox.TabStop = false;
@@ -96,18 +104,90 @@
             // 
             // btnConvert
             // 
-            this.btnConvert.Location = new System.Drawing.Point(231, 12);
+            this.btnConvert.Location = new System.Drawing.Point(230, 13);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(105, 23);
             this.btnConvert.TabIndex = 6;
             this.btnConvert.Text = "Convert image";
             this.btnConvert.UseVisualStyleBackColor = true;
             // 
+            // txtVerticalPixels
+            // 
+            this.txtHeigth.Location = new System.Drawing.Point(391, 30);
+            this.txtHeigth.Name = "txtVerticalPixels";
+            this.txtHeigth.Size = new System.Drawing.Size(57, 20);
+            this.txtHeigth.TabIndex = 13;
+            this.txtHeigth.Leave += new System.EventHandler(this.txtHeigth_Leave);
+            // 
+            // txtHorizontalPixels
+            // 
+            this.txtWidth.Location = new System.Drawing.Point(392, 4);
+            this.txtWidth.Name = "txtHorizontalPixels";
+            this.txtWidth.Size = new System.Drawing.Size(56, 20);
+            this.txtWidth.TabIndex = 14;
+            this.txtWidth.Leave += new System.EventHandler(this.txtWidth_Leave);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(351, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Width";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(351, 33);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Height";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(351, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Scale";
+            // 
+            // scaleTrackBar
+            // 
+            this.scaleTrackBar.LargeChange = 10;
+            this.scaleTrackBar.Location = new System.Drawing.Point(391, 59);
+            this.scaleTrackBar.Maximum = 100;
+            this.scaleTrackBar.Name = "scaleTrackBar";
+            this.scaleTrackBar.Size = new System.Drawing.Size(151, 45);
+            this.scaleTrackBar.TabIndex = 18;
+            this.scaleTrackBar.TickFrequency = 5;
+            this.scaleTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.scaleTrackBar.Value = 100;
+            this.scaleTrackBar.Scroll += new System.EventHandler(this.scaleTrackBar_Scroll);
+            // 
+            // lblScaleValue
+            // 
+            this.lblScaleValue.AutoSize = true;
+            this.lblScaleValue.Location = new System.Drawing.Point(542, 69);
+            this.lblScaleValue.Name = "lblScaleValue";
+            this.lblScaleValue.Size = new System.Drawing.Size(36, 13);
+            this.lblScaleValue.TabIndex = 19;
+            this.lblScaleValue.Text = "100 %";
+            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 510);
+            this.ClientSize = new System.Drawing.Size(589, 510);
+            this.Controls.Add(this.lblScaleValue);
+            this.Controls.Add(this.scaleTrackBar);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtWidth);
+            this.Controls.Add(this.txtHeigth);
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.btnLoadPicture);
             this.Controls.Add(this.pictureBox);
@@ -117,7 +197,9 @@
             this.Controls.Add(this.LoadBlockInfoButton);
             this.Name = "MCPACMainForm";
             this.Text = "MC Pixel Art Converter";
+            this.Load += new System.EventHandler(this.MCPACMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,6 +214,13 @@
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button btnLoadPicture;
         private System.Windows.Forms.Button btnConvert;
+        private System.Windows.Forms.TextBox txtHeigth;
+        private System.Windows.Forms.TextBox txtWidth;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TrackBar scaleTrackBar;
+        private System.Windows.Forms.Label lblScaleValue;
     }
 }
 

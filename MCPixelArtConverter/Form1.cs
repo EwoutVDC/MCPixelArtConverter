@@ -54,6 +54,53 @@ namespace MCPixelArtConverter
                 Program.picture = new Bitmap(fileBrowser.FileName);
                 pictureBox.Image = Program.picture;
             }
+            
+            scaleTrackBar.Value = 100;
+            updateScaleValue(scaleTrackBar.Value);
+        }
+
+        private void scaleTrackBar_Scroll(object sender, EventArgs e)
+        {
+            updateScaleValue(scaleTrackBar.Value);
+        }
+
+        private void updateScaleValue(Double scale)
+        {
+            lblScaleValue.Text = scale.ToString("0.##") + "%";
+            scaleTrackBar.Value = (int)scale;
+
+            if (Program.picture != null)
+            { 
+                txtWidth.Text = (Program.picture.Width * (int)scale / 100).ToString();
+                txtHeigth.Text = (Program.picture.Height * (int)scale / 100).ToString();
+            }
+        }
+
+        private void txtWidth_Leave(object sender, EventArgs e)
+        {
+            Double width;
+
+            if (Program.picture != null && Double.TryParse(txtWidth.Text, out width))
+            {
+                Double scale = width * 100 / Program.picture.Width;
+                updateScaleValue(scale);
+            }
+        }
+
+        private void txtHeigth_Leave(object sender, EventArgs e)
+        {
+            Double heigth;
+
+            if (Program.picture != null && Double.TryParse(txtHeigth.Text, out heigth))
+            {
+                Double scale = heigth * 100 / Program.picture.Height;
+                updateScaleValue(scale);
+            }
+        }
+
+        private void MCPACMainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
