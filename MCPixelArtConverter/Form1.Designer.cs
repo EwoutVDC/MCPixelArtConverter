@@ -32,6 +32,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxAvailableBlocks = new System.Windows.Forms.ComboBox();
             this.btnShowTexture = new System.Windows.Forms.Button();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.btnLoadPicture = new System.Windows.Forms.Button();
+            this.btnConvert = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // LoadBlockInfoButton
@@ -71,17 +75,49 @@
             this.btnShowTexture.UseVisualStyleBackColor = true;
             this.btnShowTexture.Click += new System.EventHandler(this.btnShowTexture_Click);
             // 
+            // pictureBox
+            // 
+            this.pictureBox.Location = new System.Drawing.Point(16, 87);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(650, 411);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox.TabIndex = 4;
+            this.pictureBox.TabStop = false;
+            // 
+            // btnLoadPicture
+            // 
+            this.btnLoadPicture.Location = new System.Drawing.Point(112, 13);
+            this.btnLoadPicture.Name = "btnLoadPicture";
+            this.btnLoadPicture.Size = new System.Drawing.Size(112, 23);
+            this.btnLoadPicture.TabIndex = 5;
+            this.btnLoadPicture.Text = "Load image";
+            this.btnLoadPicture.UseVisualStyleBackColor = true;
+            this.btnLoadPicture.Click += new System.EventHandler(this.btnLoadPicture_Click);
+            // 
+            // btnConvert
+            // 
+            this.btnConvert.Location = new System.Drawing.Point(231, 12);
+            this.btnConvert.Name = "btnConvert";
+            this.btnConvert.Size = new System.Drawing.Size(105, 23);
+            this.btnConvert.TabIndex = 6;
+            this.btnConvert.Text = "Convert image";
+            this.btnConvert.UseVisualStyleBackColor = true;
+            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(678, 510);
+            this.Controls.Add(this.btnConvert);
+            this.Controls.Add(this.btnLoadPicture);
+            this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.btnShowTexture);
             this.Controls.Add(this.comboBoxAvailableBlocks);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LoadBlockInfoButton);
             this.Name = "MCPACMainForm";
             this.Text = "MC Pixel Art Converter";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -93,6 +129,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxAvailableBlocks;
         private System.Windows.Forms.Button btnShowTexture;
+        private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.Button btnLoadPicture;
+        private System.Windows.Forms.Button btnConvert;
     }
 }
 

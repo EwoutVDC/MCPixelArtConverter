@@ -43,5 +43,17 @@ namespace MCPixelArtConverter
             textureForm.Controls.Add(pictureBox);
             textureForm.ShowDialog();
         }
+
+        private void btnLoadPicture_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fileBrowser = new OpenFileDialog();
+            fileBrowser.ShowDialog();
+
+            if (fileBrowser.CheckFileExists)
+            {
+                Program.picture = new Bitmap(fileBrowser.FileName);
+                pictureBox.Image = Program.picture;
+            }
+        }
     }
 }
