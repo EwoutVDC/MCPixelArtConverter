@@ -12,27 +12,32 @@ namespace MCPixelArtConverter
     class MCBlockState
     {
         String FileName;
-        Dictionary<String, MCBlockVariant> Variants;
+        Dictionary<String, MCBlockVariant> Variants = new Dictionary<string, MCBlockVariant>();
         //multipart blockstates todo
 
         public MCBlockState(String fileName)
         {
-            this.FileName = fileName;
-            JObject blockStateJson = JObject.Parse(File.ReadAllText(FileName));
+            this.FileName = Path.GetFileNameWithoutExtension(fileName);
+            JObject blockStateJson = JObject.Parse(File.ReadAllText(fileName));
             IDictionary<string, JToken> variantsDict = (JObject)blockStateJson["variants"];
-            Variants = variantsDict.ToDictionary(pair => pair.Key, pair => new MCBlockVariant(this, pair.Key, pair.Value));
-            
-            foreach(KeyValuePair<String, MCBlockVariant> kv in Variants)
-            {
-                Console.WriteLine("key: " + kv.Key);
-                Console.WriteLine("value: " + kv.Value);
-            }
-
+            if (variantsDict != null)
+                Variants = variantsDict.ToDictionary(pair => pair.Key, pair => new MCBlockVariant(this, pair.Key, pair.Value));
         }
 
         public Bitmap GetTopView()
         {
-            return Variants["normal"].getTopView();
+            MCBlockVariant variant;
+            if (Variants.TryGetValue("normal", out variant))
+            {
+                return variant.getTopView();
+            }
+            else
+                return null;
+        }
+
+        public String getFileName()
+        {
+            return FileName;
         }
     }
 }

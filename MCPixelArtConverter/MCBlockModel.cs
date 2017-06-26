@@ -15,12 +15,15 @@ namespace MCPixelArtConverter
         const String ModelFolderPath = "models\\block\\";
         const String TextureFolderPath = "textures\\";
         //TODO blockstate backpointer needed???
+
         MCBlockModel parent;
 
         Dictionary<String, Bitmap> textures;
         //possible textures keys: all, top, bottom, north, south, east, west, side
 
         List<MCBlockElement> elements;
+
+
         JObject json;
 
         public MCBlockModel(String modelFileName)
@@ -40,7 +43,15 @@ namespace MCPixelArtConverter
 
         public Bitmap getTopView()
         {
-            return textures["all"]; //TODO
+            Bitmap bm;
+            if (textures.TryGetValue("all", out bm))
+            {
+                return bm;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override String ToString()
