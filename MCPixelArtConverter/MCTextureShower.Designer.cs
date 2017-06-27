@@ -28,15 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new MCPixelArtConverter.PictureBoxWithSettings();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(260, 237);
+            this.pictureBox1.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            this.pictureBox1.Size = new System.Drawing.Size(284, 261);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -55,6 +59,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private PictureBoxWithSettings pictureBox1;
     }
 }

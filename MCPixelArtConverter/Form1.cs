@@ -13,6 +13,15 @@ namespace MCPixelArtConverter
 {
     public partial class MCPACMainForm : Form
     {
+        //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
+        //TODO: use minecraft jar + resource pack folders instead of unzipped folders
+        String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        MCResourcePack resourcePack;
+        Bitmap image;
+        Size scaledSize;
+
+        MCTextureShower textureForm;
+
         public MCPACMainForm()
         {
             InitializeComponent();
@@ -21,27 +30,24 @@ namespace MCPixelArtConverter
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-            if (!String.IsNullOrEmpty(Program.BaseFolderName))
-                folderBrowser.SelectedPath = Program.BaseFolderName;
+            if (!String.IsNullOrEmpty(baseFolderName))
+                folderBrowser.SelectedPath = baseFolderName;
             folderBrowser.ShowDialog();
 
-            Program.BaseFolderName = folderBrowser.SelectedPath + "\\";
+            baseFolderName = folderBrowser.SelectedPath + "\\";
 
-            Program.resourcePack = new MCResourcePack(Program.BaseFolderName);
+            resourcePack = new MCResourcePack(baseFolderName);
 
-            comboBoxAvailableBlocks.Items.AddRange(Program.resourcePack.getBlockNames().ToArray());
+            comboBoxAvailableBlocks.Items.AddRange(resourcePack.getBlockNames().ToArray());
         }
 
         private void btnShowTexture_Click(object sender, EventArgs e)
         {
-            Form textureForm = new Form();
-            textureForm.Text = "Texture viewer";
-            PictureBox pictureBox = new PictureBox();
-            pictureBox.Image = Program.resourcePack.getState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView();
-            pictureBox.Dock = DockStyle.Fill;
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            if (textureForm == null || textureForm.IsDisposed)
+                textureForm = new MCTextureShower();
+            textureForm.setImage(resourcePack.getState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
             textureForm.Controls.Add(pictureBox);
-            textureForm.ShowDialog();
+            textureForm.Show(); //TODO: fix cannot access disposed object after closing window
         }
 
         private void btnLoadPicture_Click(object sender, EventArgs e)
@@ -51,8 +57,7 @@ namespace MCPixelArtConverter
 
             if (fileBrowser.CheckFileExists)
             {
-                Program.picture = new Bitmap(fileBrowser.FileName);
-                pictureBox.Image = Program.picture;
+                image = new Bitmap(fileBrowser.FileName);
             }
             
             scaleTrackBar.Value = 100;
@@ -69,20 +74,27 @@ namespace MCPixelArtConverter
             lblScaleValue.Text = scale.ToString("0.##") + "%";
             scaleTrackBar.Value = (int)scale;
 
-            if (Program.picture != null)
+            //TODO: fix rounding here
+            scaledSize = new Size((Int32) (image.Width * scale / 100), (Int32) (image.Height * scale / 100));
+
+            if (image != null)
             { 
-                txtWidth.Text = (Program.picture.Width * (int)scale / 100).ToString();
-                txtHeigth.Text = (Program.picture.Height * (int)scale / 100).ToString();
+                txtWidth.Text = scaledSize.Width.ToString();
+                txtHeigth.Text = scaledSize.Height.ToString();
             }
+
+            pictureBox.Image = new Bitmap(image, scaledSize);
         }
 
         private void txtWidth_Leave(object sender, EventArgs e)
         {
             Double width;
 
-            if (Program.picture != null && Double.TryParse(txtWidth.Text, out width))
+            //TODO: This shouldn't change the value: ie 128/250 -> 127
+
+            if (image != null && Double.TryParse(txtWidth.Text, out width))
             {
-                Double scale = width * 100 / Program.picture.Width;
+                Double scale = width * 100 / image.Width;
                 updateScaleValue(scale);
             }
         }
@@ -91,16 +103,19 @@ namespace MCPixelArtConverter
         {
             Double heigth;
 
-            if (Program.picture != null && Double.TryParse(txtHeigth.Text, out heigth))
+            if (image != null && Double.TryParse(txtHeigth.Text, out heigth))
             {
-                Double scale = heigth * 100 / Program.picture.Height;
+                Double scale = heigth * 100 / image.Height;
                 updateScaleValue(scale);
             }
         }
 
-        private void MCPACMainForm_Load(object sender, EventArgs e)
+        private void btnConvert_Click(object sender, EventArgs e)
         {
+            ImageConverter imageConverter = new ImageConverterAverage(resourcePack);
+            MCBlockState[,] blocks = imageConverter.Convert(image, scaledSize);
+            Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
 
-        }
+    }
     }
 }

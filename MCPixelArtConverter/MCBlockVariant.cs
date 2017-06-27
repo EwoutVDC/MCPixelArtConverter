@@ -11,7 +11,7 @@ namespace MCPixelArtConverter
     class MCBlockVariant
     {
         MCBlockState blockState;
-        String name;
+        String Name { get; }
         List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
         
         JToken json;
@@ -34,18 +34,18 @@ namespace MCPixelArtConverter
         public MCBlockVariant(MCBlockState blockState, String variantName, JToken value)
         {
             this.blockState = blockState;
-            this.name = variantName;
+            this.Name = variantName;
             json = value;
 
             switch (value.Type)
             {
                 case JTokenType.Object:
-                    CreateModelFromJson(value);
+                    models.Add(CreateModelFromJson(value));
                     break;
                 case JTokenType.Array:
                     foreach (JObject modelObject in (JArray) value)
                     {
-                        CreateModelFromJson(modelObject);
+                        models.Add(CreateModelFromJson(modelObject));
                     }
                     break;
                 default:
@@ -54,12 +54,12 @@ namespace MCPixelArtConverter
 
         }
 
-        private void CreateModelFromJson(JToken value)
+        private MCBlockModel CreateModelFromJson(JToken value)
         {
             IDictionary<string, JToken> variantsDict = (JObject)value;
             jsonProperties = variantsDict.ToDictionary(pair => pair.Key, pair => pair.Value);
             String fileName = jsonProperties["model"].ToString();
-            models.Add(new MCBlockModel(fileName));
+            return new MCBlockModel(blockState.BaseFolder, fileName);
         }
 
         public override String ToString()

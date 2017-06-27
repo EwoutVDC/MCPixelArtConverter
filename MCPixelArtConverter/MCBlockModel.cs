@@ -24,11 +24,11 @@ namespace MCPixelArtConverter
         List<MCBlockElement> elements;
 
 
-        JObject json;
+        JObject json; //TODO: this should not be needed in the end
 
-        public MCBlockModel(String modelFileName)
+        public MCBlockModel(String baseFolderName, String modelFileName)
         {
-            json = JObject.Parse(File.ReadAllText(Program.BaseFolderName + ModelFolderPath + modelFileName + ".json"));
+            json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
 
             //Load parent model TODO
 
@@ -36,7 +36,7 @@ namespace MCPixelArtConverter
             IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
             textures = texturesDict.ToDictionary(
                 pair => pair.Key,
-                pair => new Bitmap(Program.BaseFolderName + TextureFolderPath + pair.Value.ToString().Replace("/", "\\") + ".png"));
+                pair => new Bitmap(baseFolderName + TextureFolderPath + pair.Value.ToString().Replace("/", "\\") + ".png"));
 
             //Load elements TODO
         }

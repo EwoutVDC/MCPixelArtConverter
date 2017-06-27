@@ -18,14 +18,14 @@ namespace MCPixelArtConverter
 
             foreach (String filename in Directory.GetFiles(baseFolderPath + "blockstates\\", "*.json"))
             {
-                MCBlockState blockstate = new MCBlockState(filename);
-                blockStates.Add(blockstate.getFileName(), blockstate);
+                MCBlockState blockstate = new MCBlockState(baseFolder, filename);
+                blockStates.Add(blockstate.FileName, blockstate);
             }
         }
 
         public void addState (MCBlockState state)
         {
-            blockStates.Add(state.getFileName(), state);
+            blockStates.Add(state.FileName, state);
         }
 
         public MCBlockState getState(String blockStateName)

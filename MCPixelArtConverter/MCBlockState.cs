@@ -11,13 +11,15 @@ namespace MCPixelArtConverter
 {
     class MCBlockState
     {
-        String FileName;
+        public String BaseFolder { get; }
+        public String FileName { get; }
         Dictionary<String, MCBlockVariant> Variants = new Dictionary<string, MCBlockVariant>();
         //multipart blockstates todo
 
-        public MCBlockState(String fileName)
+        public MCBlockState(String baseFolder, String fileName)
         {
-            this.FileName = Path.GetFileNameWithoutExtension(fileName);
+            BaseFolder = baseFolder;
+            FileName = Path.GetFileNameWithoutExtension(fileName);
             JObject blockStateJson = JObject.Parse(File.ReadAllText(fileName));
             IDictionary<string, JToken> variantsDict = (JObject)blockStateJson["variants"];
             if (variantsDict != null)
@@ -33,11 +35,6 @@ namespace MCPixelArtConverter
             }
             else
                 return null;
-        }
-
-        public String getFileName()
-        {
-            return FileName;
         }
     }
 }

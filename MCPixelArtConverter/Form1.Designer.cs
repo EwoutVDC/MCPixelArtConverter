@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxAvailableBlocks = new System.Windows.Forms.ComboBox();
             this.btnShowTexture = new System.Windows.Forms.Button();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.pictureBox = new MCPixelArtConverter.PictureBoxWithSettings();
             this.btnLoadPicture = new System.Windows.Forms.Button();
             this.btnConvert = new System.Windows.Forms.Button();
             this.txtHeigth = new System.Windows.Forms.TextBox();
@@ -85,8 +85,10 @@
             // 
             // pictureBox
             // 
+            this.pictureBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.pictureBox.Location = new System.Drawing.Point(16, 110);
             this.pictureBox.Name = "pictureBox";
+            this.pictureBox.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
             this.pictureBox.Size = new System.Drawing.Size(561, 388);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 4;
@@ -110,19 +112,20 @@
             this.btnConvert.TabIndex = 6;
             this.btnConvert.Text = "Convert image";
             this.btnConvert.UseVisualStyleBackColor = true;
+            this.btnConvert.Click += new System.EventHandler(this.btnConvert_Click);
             // 
-            // txtVerticalPixels
+            // txtHeigth
             // 
             this.txtHeigth.Location = new System.Drawing.Point(391, 30);
-            this.txtHeigth.Name = "txtVerticalPixels";
+            this.txtHeigth.Name = "txtHeigth";
             this.txtHeigth.Size = new System.Drawing.Size(57, 20);
             this.txtHeigth.TabIndex = 13;
             this.txtHeigth.Leave += new System.EventHandler(this.txtHeigth_Leave);
             // 
-            // txtHorizontalPixels
+            // txtWidth
             // 
             this.txtWidth.Location = new System.Drawing.Point(392, 4);
-            this.txtWidth.Name = "txtHorizontalPixels";
+            this.txtWidth.Name = "txtWidth";
             this.txtWidth.Size = new System.Drawing.Size(56, 20);
             this.txtWidth.TabIndex = 14;
             this.txtWidth.Leave += new System.EventHandler(this.txtWidth_Leave);
@@ -159,6 +162,7 @@
             this.scaleTrackBar.LargeChange = 10;
             this.scaleTrackBar.Location = new System.Drawing.Point(391, 59);
             this.scaleTrackBar.Maximum = 100;
+            this.scaleTrackBar.Minimum = 1;
             this.scaleTrackBar.Name = "scaleTrackBar";
             this.scaleTrackBar.Size = new System.Drawing.Size(151, 45);
             this.scaleTrackBar.TabIndex = 18;
@@ -197,7 +201,6 @@
             this.Controls.Add(this.LoadBlockInfoButton);
             this.Name = "MCPACMainForm";
             this.Text = "MC Pixel Art Converter";
-            this.Load += new System.EventHandler(this.MCPACMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).EndInit();
             this.ResumeLayout(false);
@@ -211,7 +214,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxAvailableBlocks;
         private System.Windows.Forms.Button btnShowTexture;
-        private System.Windows.Forms.PictureBox pictureBox;
+        private PictureBoxWithSettings pictureBox;
         private System.Windows.Forms.Button btnLoadPicture;
         private System.Windows.Forms.Button btnConvert;
         private System.Windows.Forms.TextBox txtHeigth;
