@@ -28,7 +28,7 @@ namespace MCPixelArtConverter
             blockStates.Add(state.FileName, state);
         }
 
-        public MCBlockState getState(String blockStateName)
+        public MCBlockState getBlockState(String blockStateName)
         {
             return blockStates[blockStateName];
         }

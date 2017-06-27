@@ -54,7 +54,7 @@ namespace MCPixelArtConverter
                 textureForm = new MCTextureShower();
             }
             
-            textureForm.setImage(resourcePack.getState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
+            textureForm.setImage(resourcePack.getBlockState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
             
             textureForm.Show(); //TODO: fix cannot access disposed object after closing window
             textureForm.Focus();
@@ -124,8 +124,20 @@ namespace MCPixelArtConverter
         {
             ImageConverter imageConverter = new ImageConverterAverage(resourcePack);
             MCBlockState[,] blocks = imageConverter.Convert(image, scaledSize);
-            Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
 
+            Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
+            Graphics g = Graphics.FromImage(pixelArtImage);
+            for (int w = 0; w < scaledSize.Width; w++)
+            {
+                for (int h = 0; h < scaledSize.Height; h++)
+                {
+                    g.DrawImage(blocks[w, h].GetTopView(), new Point(16 * w, 16 * h));
+                }
+            }
+
+            MCTextureShower form = new MCTextureShower();
+            form.setImage(pixelArtImage);
+            form.Show();
         }
     }
 }

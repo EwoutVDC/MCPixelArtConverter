@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace MCPixelArtConverter
 {
+    //Average uses the average color of each block texture as one pixel
+    //TODO: add converter that matches each pixel of the block texture to the original image
     class ImageConverterAverage : ImageConverter
     {
         static String[] validBlocks = {"black_wool",
@@ -27,14 +29,39 @@ namespace MCPixelArtConverter
                                        "yellow_wool" };
 
         MCResourcePack resourcePack;
+        Dictionary<String, Color> averageColors = new Dictionary<String, Color>();
 
         public ImageConverterAverage(MCResourcePack rp)
         {
             resourcePack = rp;
+
+            foreach (String blockName in validBlocks)
+            {
+                MCBlockState blockState = resourcePack.getBlockState(blockName);
+                Bitmap topView = blockState.GetTopView();
+                //TODO: this average calculation is unsafe
+                Int64 r = 0, g = 0, b = 0;
+
+                for (int w = 0; w < topView.Width; w++)
+                {
+                    for (int h = 0; h < topView.Height; h++)
+                    {
+                        r += topView.GetPixel(w, h).R;
+                        g += topView.GetPixel(w, h).G;
+                        b += topView.GetPixel(w, h).B;
+                    }
+                }
+                r /= (topView.Width * topView.Height);
+                g /= (topView.Width * topView.Height);
+                b /= (topView.Width * topView.Height);
+
+                averageColors.Add(blockName, Color.FromArgb((int)r, (int)g, (int)b));
+            }
         }
 
         public MCBlockState[,] Convert(Bitmap image, Size size)
         {
+            //TODO: Does this uses interpolation/dithering???? better scaling algorithm using Graphics
             Bitmap scaledImage = new Bitmap(image, size);
             MCBlockState[,] blocks = new MCBlockState[size.Width, size.Height];
 
@@ -51,11 +78,17 @@ namespace MCPixelArtConverter
 
         MCBlockState GetBestBlock(Color pixel)
         {
-            Int32 minDiffScore = Int32.MaxValue;
+            Double minDiffScore = Double.MaxValue;
             MCBlockState bestBlock = null;
-            foreach (string blockName in validBlocks)
+            foreach (KeyValuePair<String, Color> nameColor in averageColors)
             {
-
+                Color c = nameColor.Value;
+                Double diff = Math.Pow(pixel.R - c.R, 2) + Math.Pow(pixel.G - c.G, 2) + Math.Pow(pixel.B - c.B, 2);
+                if (diff < minDiffScore)
+                {
+                    bestBlock = resourcePack.getBlockState(nameColor.Key);
+                    minDiffScore = diff;
+                }
             }
 
             return bestBlock;
