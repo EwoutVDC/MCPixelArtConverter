@@ -62,11 +62,11 @@
     <Compile Include="MCBlockVariant.cs" />
     <Compile Include="MCPoint.cs" />
     <Compile Include="MCResourcePack.cs" />
-    <Compile Include="MCTextureShower.cs">
+    <Compile Include="MCPACImageForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MCTextureShower.Designer.cs">
-      <DependentUpon>MCTextureShower.cs</DependentUpon>
+    <Compile Include="MCPACImageForm.Designer.cs">
+      <DependentUpon>MCPACImageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PictureBoxWithSettings.cs">
       <SubType>Component</SubType>
@@ -76,8 +76,8 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MCTextureShower.resx">
-      <DependentUpon>MCTextureShower.cs</DependentUpon>
+    <EmbeddedResource Include="MCPACImageForm.resx">
+      <DependentUpon>MCPACImageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

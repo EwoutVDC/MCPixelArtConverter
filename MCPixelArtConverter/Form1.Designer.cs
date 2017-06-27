@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.LoadBlockInfoButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxAvailableBlocks = new System.Windows.Forms.ComboBox();
-            this.btnShowTexture = new System.Windows.Forms.Button();
             this.pictureBox = new MCPixelArtConverter.PictureBoxWithSettings();
             this.btnLoadPicture = new System.Windows.Forms.Button();
             this.btnConvert = new System.Windows.Forms.Button();
@@ -42,6 +39,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.scaleTrackBar = new System.Windows.Forms.TrackBar();
             this.lblScaleValue = new System.Windows.Forms.Label();
+            this.btnShowTexture = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxAvailableBlocks = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -56,35 +56,11 @@
             this.LoadBlockInfoButton.UseVisualStyleBackColor = true;
             this.LoadBlockInfoButton.Click += new System.EventHandler(this.LoadBlockInfoButton_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Available blocks:";
-            // 
-            // comboBoxAvailableBlocks
-            // 
-            this.comboBoxAvailableBlocks.FormattingEnabled = true;
-            this.comboBoxAvailableBlocks.Location = new System.Drawing.Point(13, 59);
-            this.comboBoxAvailableBlocks.Name = "comboBoxAvailableBlocks";
-            this.comboBoxAvailableBlocks.Size = new System.Drawing.Size(188, 21);
-            this.comboBoxAvailableBlocks.TabIndex = 2;
-            // 
-            // btnShowTexture
-            // 
-            this.btnShowTexture.Location = new System.Drawing.Point(207, 59);
-            this.btnShowTexture.Name = "btnShowTexture";
-            this.btnShowTexture.Size = new System.Drawing.Size(129, 23);
-            this.btnShowTexture.TabIndex = 3;
-            this.btnShowTexture.Text = "Show selected texture";
-            this.btnShowTexture.UseVisualStyleBackColor = true;
-            this.btnShowTexture.Click += new System.EventHandler(this.btnShowTexture_Click);
-            // 
             // pictureBox
             // 
+            this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.pictureBox.Location = new System.Drawing.Point(16, 110);
             this.pictureBox.Name = "pictureBox";
@@ -161,12 +137,12 @@
             // 
             this.scaleTrackBar.LargeChange = 10;
             this.scaleTrackBar.Location = new System.Drawing.Point(391, 59);
-            this.scaleTrackBar.Maximum = 100;
+            this.scaleTrackBar.Maximum = 200;
             this.scaleTrackBar.Minimum = 1;
             this.scaleTrackBar.Name = "scaleTrackBar";
             this.scaleTrackBar.Size = new System.Drawing.Size(151, 45);
             this.scaleTrackBar.TabIndex = 18;
-            this.scaleTrackBar.TickFrequency = 5;
+            this.scaleTrackBar.TickFrequency = 10;
             this.scaleTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.scaleTrackBar.Value = 100;
             this.scaleTrackBar.Scroll += new System.EventHandler(this.scaleTrackBar_Scroll);
@@ -179,6 +155,33 @@
             this.lblScaleValue.Size = new System.Drawing.Size(36, 13);
             this.lblScaleValue.TabIndex = 19;
             this.lblScaleValue.Text = "100 %";
+            // 
+            // btnShowTexture
+            // 
+            this.btnShowTexture.Location = new System.Drawing.Point(207, 59);
+            this.btnShowTexture.Name = "btnShowTexture";
+            this.btnShowTexture.Size = new System.Drawing.Size(129, 23);
+            this.btnShowTexture.TabIndex = 3;
+            this.btnShowTexture.Text = "Show selected texture";
+            this.btnShowTexture.UseVisualStyleBackColor = true;
+            this.btnShowTexture.Click += new System.EventHandler(this.btnShowTexture_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Available blocks:";
+            // 
+            // comboBoxAvailableBlocks
+            // 
+            this.comboBoxAvailableBlocks.FormattingEnabled = true;
+            this.comboBoxAvailableBlocks.Location = new System.Drawing.Point(13, 59);
+            this.comboBoxAvailableBlocks.Name = "comboBoxAvailableBlocks";
+            this.comboBoxAvailableBlocks.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxAvailableBlocks.TabIndex = 2;
             // 
             // MCPACMainForm
             // 
@@ -211,9 +214,6 @@
         #endregion
 
         private System.Windows.Forms.Button LoadBlockInfoButton;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxAvailableBlocks;
-        private System.Windows.Forms.Button btnShowTexture;
         private PictureBoxWithSettings pictureBox;
         private System.Windows.Forms.Button btnLoadPicture;
         private System.Windows.Forms.Button btnConvert;
@@ -224,6 +224,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar scaleTrackBar;
         private System.Windows.Forms.Label lblScaleValue;
+        private System.Windows.Forms.Button btnShowTexture;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxAvailableBlocks;
     }
 }
 

@@ -16,6 +16,11 @@ namespace MCPixelArtConverter
         {
             baseFolderPath = baseFolder;
 
+            if (!Directory.Exists(baseFolderPath + "blockstates\\"))
+            {
+                throw new ArgumentException("Invalid baseFolder " + baseFolder);
+            }
+
             foreach (String filename in Directory.GetFiles(baseFolderPath + "blockstates\\", "*.json"))
             {
                 MCBlockState blockstate = new MCBlockState(baseFolder, filename);

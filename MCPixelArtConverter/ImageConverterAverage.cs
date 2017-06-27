@@ -62,7 +62,9 @@ namespace MCPixelArtConverter
         public MCBlockState[,] Convert(Bitmap image, Size size)
         {
             //TODO: Does this uses interpolation/dithering???? better scaling algorithm using Graphics
+            Graphics g = Graphics.FromImage(image);
             Bitmap scaledImage = new Bitmap(image, size);
+            //scaledImage.
             MCBlockState[,] blocks = new MCBlockState[size.Width, size.Height];
 
             for (int w = 0; w < size.Width; w++)

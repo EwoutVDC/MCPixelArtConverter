@@ -15,7 +15,8 @@ namespace MCPixelArtConverter
     {
         //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        //String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        String baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack;
         Bitmap image;
         Size scaledSize;
@@ -41,17 +42,17 @@ namespace MCPixelArtConverter
 
         private void btnShowTexture_Click(object sender, EventArgs e)
         {
-            MCTextureShower textureForm = null;
+            MCPACImageForm textureForm = null;
             foreach (Form f in Application.OpenForms)
             {
-                if (f is MCTextureShower)
+                if (f is MCPACImageForm)
                 {
-                    textureForm = (MCTextureShower)f;
+                    textureForm = (MCPACImageForm)f;
                 }
             }
             if (textureForm == null)
             {
-                textureForm = new MCTextureShower();
+                textureForm = new MCPACImageForm();
             }
             
             textureForm.setImage(resourcePack.getBlockState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
@@ -135,7 +136,7 @@ namespace MCPixelArtConverter
                 }
             }
 
-            MCTextureShower form = new MCTextureShower();
+            MCPACImageForm form = new MCPACImageForm();
             form.setImage(pixelArtImage);
             form.Show();
         }
