@@ -39,9 +39,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.scaleTrackBar = new System.Windows.Forms.TrackBar();
             this.lblScaleValue = new System.Windows.Forms.Label();
-            this.btnShowTexture = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxAvailableBlocks = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -156,33 +153,6 @@
             this.lblScaleValue.TabIndex = 19;
             this.lblScaleValue.Text = "100 %";
             // 
-            // btnShowTexture
-            // 
-            this.btnShowTexture.Location = new System.Drawing.Point(207, 59);
-            this.btnShowTexture.Name = "btnShowTexture";
-            this.btnShowTexture.Size = new System.Drawing.Size(129, 23);
-            this.btnShowTexture.TabIndex = 3;
-            this.btnShowTexture.Text = "Show selected texture";
-            this.btnShowTexture.UseVisualStyleBackColor = true;
-            this.btnShowTexture.Click += new System.EventHandler(this.btnShowTexture_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Available blocks:";
-            // 
-            // comboBoxAvailableBlocks
-            // 
-            this.comboBoxAvailableBlocks.FormattingEnabled = true;
-            this.comboBoxAvailableBlocks.Location = new System.Drawing.Point(13, 59);
-            this.comboBoxAvailableBlocks.Name = "comboBoxAvailableBlocks";
-            this.comboBoxAvailableBlocks.Size = new System.Drawing.Size(188, 21);
-            this.comboBoxAvailableBlocks.TabIndex = 2;
-            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,9 +168,6 @@
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.btnLoadPicture);
             this.Controls.Add(this.pictureBox);
-            this.Controls.Add(this.btnShowTexture);
-            this.Controls.Add(this.comboBoxAvailableBlocks);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.LoadBlockInfoButton);
             this.Name = "MCPACMainForm";
             this.Text = "MC Pixel Art Converter";
@@ -224,9 +191,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar scaleTrackBar;
         private System.Windows.Forms.Label lblScaleValue;
-        private System.Windows.Forms.Button btnShowTexture;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxAvailableBlocks;
     }
 }
 

@@ -36,29 +36,6 @@ namespace MCPixelArtConverter
             baseFolderName = folderBrowser.SelectedPath + "\\";
 
             resourcePack = new MCResourcePack(baseFolderName);
-
-            comboBoxAvailableBlocks.Items.AddRange(resourcePack.getBlockNames().ToArray());
-        }
-
-        private void btnShowTexture_Click(object sender, EventArgs e)
-        {
-            MCPACImageForm textureForm = null;
-            foreach (Form f in Application.OpenForms)
-            {
-                if (f is MCPACImageForm)
-                {
-                    textureForm = (MCPACImageForm)f;
-                }
-            }
-            if (textureForm == null)
-            {
-                textureForm = new MCPACImageForm();
-            }
-            
-            textureForm.setImage(resourcePack.getBlockState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
-            
-            textureForm.Show(); //TODO: fix cannot access disposed object after closing window
-            textureForm.Focus();
         }
 
         private void btnLoadPicture_Click(object sender, EventArgs e)
@@ -85,7 +62,7 @@ namespace MCPixelArtConverter
             lblScaleValue.Text = scale.ToString("0.##") + "%";
             scaleTrackBar.Value = (int)scale;
 
-            //TODO: fix rounding here
+            //TODO: fix rounding here - values change after repeatedly changing focus >.<
             scaledSize = new Size((Int32) (image.Width * scale / 100), (Int32) (image.Height * scale / 100));
 
             if (image != null)
