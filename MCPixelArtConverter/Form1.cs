@@ -19,9 +19,7 @@ namespace MCPixelArtConverter
         MCResourcePack resourcePack;
         Bitmap image;
         Size scaledSize;
-
-        MCTextureShower textureForm;
-
+        
         public MCPACMainForm()
         {
             InitializeComponent();
@@ -43,11 +41,23 @@ namespace MCPixelArtConverter
 
         private void btnShowTexture_Click(object sender, EventArgs e)
         {
-            if (textureForm == null || textureForm.IsDisposed)
+            MCTextureShower textureForm = null;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f is MCTextureShower)
+                {
+                    textureForm = (MCTextureShower)f;
+                }
+            }
+            if (textureForm == null)
+            {
                 textureForm = new MCTextureShower();
+            }
+            
             textureForm.setImage(resourcePack.getState(comboBoxAvailableBlocks.SelectedItem.ToString()).GetTopView());
-            textureForm.Controls.Add(pictureBox);
+            
             textureForm.Show(); //TODO: fix cannot access disposed object after closing window
+            textureForm.Focus();
         }
 
         private void btnLoadPicture_Click(object sender, EventArgs e)
@@ -116,6 +126,6 @@ namespace MCPixelArtConverter
             MCBlockState[,] blocks = imageConverter.Convert(image, scaledSize);
             Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
 
-    }
+        }
     }
 }
