@@ -15,8 +15,8 @@ namespace MCPixelArtConverter
     {
         //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        //String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        String baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        //String baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack;
         Bitmap image;
         Size scaledSize;
@@ -24,6 +24,8 @@ namespace MCPixelArtConverter
         public MCPACMainForm()
         {
             InitializeComponent();
+
+            cmbFacing.DataSource = Enum.GetValues(typeof(Sides));
         }
 
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
@@ -100,8 +102,17 @@ namespace MCPixelArtConverter
 
         private void btnConvert_Click(object sender, EventArgs e)
         {
-            ImageConverter imageConverter = new ImageConverterAverage(resourcePack);
-            MCBlockState[,] blocks = imageConverter.Convert(image, scaledSize);
+            Sides side;
+            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
+            {
+                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
+                return;
+            }
+
+            //TODO: construct and keep when changing combobox
+            ImageConverter imageConverter = new ImageConverterAverage(resourcePack, side);
+
+            MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);
 
             Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
             Graphics g = Graphics.FromImage(pixelArtImage);
@@ -109,7 +120,7 @@ namespace MCPixelArtConverter
             {
                 for (int h = 0; h < scaledSize.Height; h++)
                 {
-                    g.DrawImage(blocks[w, h].GetTopView(), new Point(16 * w, 16 * h));
+                    g.DrawImage(blocks[w, h].getTexture(side), new Point(16 * w, 16 * h));
                 }
             }
 

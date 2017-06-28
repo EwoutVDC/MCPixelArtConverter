@@ -10,12 +10,13 @@ namespace MCPixelArtConverter
 {
     class MCBlockVariant
     {
-        MCBlockState blockState;
-        String Name { get; }
+        public MCBlockState blockState { get; }
+        public String Name { get; }
+        //Only the first model of a variant is used
         List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
         
         JToken json;
-        Dictionary<String, JToken> jsonProperties; //uvlock etc... not good
+        Dictionary<String, JToken> jsonProperties; //uvlock etc... not good. These should be properties of the MCBlockModel
 
         /*
         Simple example:
@@ -30,11 +31,18 @@ namespace MCPixelArtConverter
                 { "model": "bedrock_mirrored", "y": 180 }
             ]
         }
+
+        "variants": {
+            "facing=south": { "model": "black_glazed_terracotta" },
+            "facing=west": { "model": "black_glazed_terracotta", "y": 90 },
+            "facing=north": { "model": "black_glazed_terracotta", "y": 180 },
+            "facing=east": { "model": "black_glazed_terracotta", "y": 270 }
+        }
         */
         public MCBlockVariant(MCBlockState blockState, String variantName, JToken value)
         {
             this.blockState = blockState;
-            this.Name = variantName;
+            Name = variantName;
             json = value;
 
             switch (value.Type)
@@ -67,10 +75,11 @@ namespace MCPixelArtConverter
             return json.ToString();
         }
 
-        public Bitmap getTopView()
+        public Bitmap getTexture(Sides facing)
         {
-            //TODO: handle multiple models
-            return models[0].getTopView();
+            return models[0].getTexture(facing);
         }
+
+        
     }
 }

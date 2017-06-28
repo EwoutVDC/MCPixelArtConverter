@@ -29,71 +29,73 @@ namespace MCPixelArtConverter
                                        "yellow_wool" };
 
         MCResourcePack resourcePack;
-        Dictionary<String, Color> averageColors = new Dictionary<String, Color>();
 
-        public ImageConverterAverage(MCResourcePack rp)
+        Dictionary<MCBlockVariant, Color> averageColors = new Dictionary<MCBlockVariant, Color>();
+
+        public ImageConverterAverage(MCResourcePack rp, Sides facing)
         {
             resourcePack = rp;
 
-            foreach (String blockName in validBlocks)
+            foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in rp.GetPalette(facing))
             {
-                MCBlockState blockState = resourcePack.getBlockState(blockName);
-                Bitmap topView = blockState.GetTopView();
-                //TODO: this average calculation is unsafe
                 Int64 r = 0, g = 0, b = 0;
+                Bitmap bm = kv.Value;
+                if (bm == null)
+                    continue; //Could not get a good texture for this variant from the facing side
 
-                for (int w = 0; w < topView.Width; w++)
+                for (int w = 0; w < bm.Width; w++)
                 {
-                    for (int h = 0; h < topView.Height; h++)
+                    for (int h = 0; h < bm.Height; h++)
                     {
-                        r += topView.GetPixel(w, h).R;
-                        g += topView.GetPixel(w, h).G;
-                        b += topView.GetPixel(w, h).B;
+                        r += bm.GetPixel(w, h).R;
+                        g += bm.GetPixel(w, h).G;
+                        b += bm.GetPixel(w, h).B;
                     }
                 }
-                r /= (topView.Width * topView.Height);
-                g /= (topView.Width * topView.Height);
-                b /= (topView.Width * topView.Height);
+                r /= (bm.Width * bm.Height);
+                g /= (bm.Width * bm.Height);
+                b /= (bm.Width * bm.Height);
 
-                averageColors.Add(blockName, Color.FromArgb((int)r, (int)g, (int)b));
+                averageColors.Add(kv.Key, Color.FromArgb((int)r, (int)g, (int)b));
             }
         }
 
-        public MCBlockState[,] Convert(Bitmap image, Size size)
-        {
-            //TODO: Does this uses interpolation/dithering???? better scaling algorithm using Graphics
-            Graphics g = Graphics.FromImage(image);
+        public MCBlockVariant[,] Convert(Bitmap image, Size size)
+        {            
             Bitmap scaledImage = new Bitmap(image, size);
-            //scaledImage.
-            MCBlockState[,] blocks = new MCBlockState[size.Width, size.Height];
+            //TODO: better way to convert image: Create palette with blocks, use GDI+ Bitmap.ConvertFormat (C++)??
+
+            MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
 
             for (int w = 0; w < size.Width; w++)
             {
                 for (int h = 0; h < size.Height; h++)
                 {
-                    blocks[w,h] = GetBestBlock(scaledImage.GetPixel(w, h));
+                    blocks[w,h] = GetBestVariant(scaledImage.GetPixel(w, h));
                 }
             }
+
+            //TODO: apply dithering? => allow to set imageDitherer and use that for different dithering algorithms
 
             return blocks;
         }
 
-        MCBlockState GetBestBlock(Color pixel)
+        MCBlockVariant GetBestVariant(Color pixel)
         {
             Double minDiffScore = Double.MaxValue;
-            MCBlockState bestBlock = null;
-            foreach (KeyValuePair<String, Color> nameColor in averageColors)
+            MCBlockVariant bestVariant = null;
+            foreach (KeyValuePair<MCBlockVariant, Color> variantColor in averageColors)
             {
-                Color c = nameColor.Value;
+                Color c = variantColor.Value;
                 Double diff = Math.Pow(pixel.R - c.R, 2) + Math.Pow(pixel.G - c.G, 2) + Math.Pow(pixel.B - c.B, 2);
                 if (diff < minDiffScore)
                 {
-                    bestBlock = resourcePack.getBlockState(nameColor.Key);
+                    bestVariant = variantColor.Key;
                     minDiffScore = diff;
                 }
             }
 
-            return bestBlock;
+            return bestVariant;
         }
     }
 }

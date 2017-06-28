@@ -26,17 +26,16 @@ namespace MCPixelArtConverter
                 Variants = variantsDict.ToDictionary(pair => pair.Key, pair => new MCBlockVariant(this, pair.Key, pair.Value));
         }
 
-        public Bitmap GetTopView()
+        public Dictionary<MCBlockVariant, Bitmap> getTextures(Sides facing)
         {
-            MCBlockVariant variant;
-            if (Variants.TryGetValue("normal", out variant))
-            {
-                return variant.getTopView();
-            }
-            else
-                return null;
-        }
+            Dictionary<MCBlockVariant, Bitmap> textures = new Dictionary<MCBlockVariant, Bitmap>();
 
-        
+            foreach (MCBlockVariant variant in Variants.Values)
+            {
+                textures.Add(variant, variant.getTexture(facing));
+            }
+
+            return textures;
+        }
     }
 }

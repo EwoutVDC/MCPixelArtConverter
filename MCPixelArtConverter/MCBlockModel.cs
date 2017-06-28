@@ -32,7 +32,7 @@ namespace MCPixelArtConverter
 
             //Load parent model TODO
 
-            //Load texture bitmaps
+            //Load texture bitmaps - TODO lazy loading of texture bitmaps
             IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
             textures = texturesDict.ToDictionary(
                 pair => pair.Key,
@@ -41,17 +41,18 @@ namespace MCPixelArtConverter
             //Load elements TODO
         }
 
-        public Bitmap getTopView()
+        public Bitmap getTexture(Sides facing)
         {
             Bitmap bm;
-            if (textures.TryGetValue("all", out bm))
+
+            //TODO: implement multiple face textures, using elements etc
+            if (!textures.TryGetValue("all", out bm))
             {
-                return bm;
-            }
-            else
-            {
+                //throw new ApplicationException("Could not compute texture");
                 return null;
             }
+
+            return bm;
         }
 
         public override String ToString()

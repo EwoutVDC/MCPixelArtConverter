@@ -39,6 +39,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.scaleTrackBar = new System.Windows.Forms.TrackBar();
             this.lblScaleValue = new System.Windows.Forms.Label();
+            this.btnSelectBlocks = new System.Windows.Forms.Button();
+            this.cmbFacing = new System.Windows.Forms.ComboBox();
+            this.lblSide = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -153,11 +156,40 @@
             this.lblScaleValue.TabIndex = 19;
             this.lblScaleValue.Text = "100 %";
             // 
+            // btnSelectBlocks
+            // 
+            this.btnSelectBlocks.Location = new System.Drawing.Point(16, 43);
+            this.btnSelectBlocks.Name = "btnSelectBlocks";
+            this.btnSelectBlocks.Size = new System.Drawing.Size(90, 23);
+            this.btnSelectBlocks.TabIndex = 20;
+            this.btnSelectBlocks.Text = "Select blocks";
+            this.btnSelectBlocks.UseVisualStyleBackColor = true;
+            // 
+            // cmbFacing
+            // 
+            this.cmbFacing.FormattingEnabled = true;
+            this.cmbFacing.Location = new System.Drawing.Point(230, 43);
+            this.cmbFacing.Name = "cmbFacing";
+            this.cmbFacing.Size = new System.Drawing.Size(105, 21);
+            this.cmbFacing.TabIndex = 21;
+            // 
+            // lblSide
+            // 
+            this.lblSide.AutoSize = true;
+            this.lblSide.Location = new System.Drawing.Point(168, 48);
+            this.lblSide.Name = "lblSide";
+            this.lblSide.Size = new System.Drawing.Size(56, 13);
+            this.lblSide.TabIndex = 22;
+            this.lblSide.Text = "Block side";
+            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(589, 510);
+            this.Controls.Add(this.lblSide);
+            this.Controls.Add(this.cmbFacing);
+            this.Controls.Add(this.btnSelectBlocks);
             this.Controls.Add(this.lblScaleValue);
             this.Controls.Add(this.scaleTrackBar);
             this.Controls.Add(this.label2);
@@ -191,6 +223,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar scaleTrackBar;
         private System.Windows.Forms.Label lblScaleValue;
+        private System.Windows.Forms.Button btnSelectBlocks;
+        private System.Windows.Forms.ComboBox cmbFacing;
+        private System.Windows.Forms.Label lblSide;
     }
 }
 

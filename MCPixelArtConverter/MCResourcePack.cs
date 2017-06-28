@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,11 +29,6 @@ namespace MCPixelArtConverter
             }
         }
 
-        public void addState (MCBlockState state)
-        {
-            blockStates.Add(state.FileName, state);
-        }
-
         public MCBlockState getBlockState(String blockStateName)
         {
             return blockStates[blockStateName];
@@ -41,6 +37,19 @@ namespace MCPixelArtConverter
         public List<String> getBlockNames()
         {
             return blockStates.Keys.ToList();
+        }
+
+        public Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides facing)
+        {
+            Dictionary<MCBlockVariant, Bitmap> textures = new Dictionary<MCBlockVariant, Bitmap>();
+            foreach (MCBlockState blockState in blockStates.Values)
+            {
+                foreach (var kv in blockState.getTextures(facing))
+                {
+                    textures.Add(kv.Key, kv.Value);
+                }
+            }
+            return textures;
         }
     }
 }

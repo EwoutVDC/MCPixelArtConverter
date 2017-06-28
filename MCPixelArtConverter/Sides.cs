@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MCPixelArtConverter
 {
-    interface ImageConverter
+    enum Sides
     {
-        MCBlockVariant[,] Convert(Bitmap image, Size size);
+        Down,
+        Up,
+        North,
+        South,
+        West,
+        East
     }
 }
