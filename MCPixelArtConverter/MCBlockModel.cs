@@ -12,36 +12,56 @@ namespace MCPixelArtConverter
 {
     class MCBlockModel
     {
-        const String ModelFolderPath = "models\\block\\";
-        const String TextureFolderPath = "textures\\";
+        const string ModelFolderPath = "models\\block\\";
+        const string TextureFolderPath = "textures\\";
         //TODO blockstate backpointer needed???
 
-        MCBlockModel parent;
+        MCBlockModel parent = null;
 
-        Dictionary<String, Bitmap> textures;
-        //possible textures keys: all, top, bottom, north, south, east, west, side
+        Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
+        Dictionary<string, string> textureReferences = new Dictionary<string, string>();
+        //common textures keys: all, top, bottom, north, south, east, west, side
+        //others: wool (carpet_color.json)
 
         List<MCBlockElement> elements;
 
 
         JObject json; //TODO: this should not be needed in the end
-
-        public MCBlockModel(String baseFolderName, String modelFileName)
+        
+        //TODO: Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
+        public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
         {
             json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
-
-            //Load parent model TODO
+            
+            JToken parentToken = json.GetValue("parent");
+            if (parentToken != null)
+            {
+                string parentFileName = parentToken.Value<string>().Replace("block/", "");
+                parent = blockModels.FromFile(parentFileName);
+            }
 
             //Load texture bitmaps - TODO lazy loading of texture bitmaps
             IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
-            textures = texturesDict.ToDictionary(
-                pair => pair.Key,
-                pair => new Bitmap(baseFolderName + TextureFolderPath + pair.Value.ToString().Replace("/", "\\") + ".png"));
+            if (texturesDict != null)
+            {
+                foreach (KeyValuePair<string, JToken> kv in texturesDict)
+                {
+                    string textureRef = kv.Value.ToString();
+                    if (textureRef.StartsWith("#"))
+                    {
+                        textureReferences.Add(kv.Key, textureRef);
+                    }
+                    else
+                    {
+                        textures.Add(kv.Key, new Bitmap(baseFolderName + TextureFolderPath + kv.Value.ToString().Replace("/", "\\") + ".png"));
+                    }
+                }
+            }
 
             //Load elements TODO
         }
 
-        public Bitmap getTexture(Sides facing)
+        public Bitmap GetSideImage(Sides side)
         {
             Bitmap bm;
 
@@ -55,7 +75,7 @@ namespace MCPixelArtConverter
             return bm;
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return json.ToString();
         }

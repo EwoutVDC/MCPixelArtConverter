@@ -15,8 +15,8 @@ namespace MCPixelArtConverter
     {
         //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        String baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        //String baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack;
         Bitmap image;
         Size scaledSize;
@@ -31,13 +31,15 @@ namespace MCPixelArtConverter
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-            if (!String.IsNullOrEmpty(baseFolderName))
+            if (!string.IsNullOrEmpty(baseFolderName))
                 folderBrowser.SelectedPath = baseFolderName;
             folderBrowser.ShowDialog();
 
             baseFolderName = folderBrowser.SelectedPath + "\\";
 
             resourcePack = new MCResourcePack(baseFolderName);
+
+            Console.WriteLine("Done loading block info");
         }
 
         private void btnLoadPicture_Click(object sender, EventArgs e)
@@ -120,7 +122,7 @@ namespace MCPixelArtConverter
             {
                 for (int h = 0; h < scaledSize.Height; h++)
                 {
-                    g.DrawImage(blocks[w, h].getTexture(side), new Point(16 * w, 16 * h));
+                    g.DrawImage(blocks[w, h].GetSideImage(side), new Point(16 * w, 16 * h));
                 }
             }
 

@@ -11,12 +11,12 @@ namespace MCPixelArtConverter
     class MCBlockVariant
     {
         public MCBlockState blockState { get; }
-        public String Name { get; }
+        public string Name { get; }
         //Only the first model of a variant is used
         List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
         
         JToken json;
-        Dictionary<String, JToken> jsonProperties; //uvlock etc... not good. These should be properties of the MCBlockModel
+        Dictionary<string, JToken> jsonProperties; //uvlock, y  etc... not good. These should be properties
 
         /*
         Simple example:
@@ -39,7 +39,7 @@ namespace MCPixelArtConverter
             "facing=east": { "model": "black_glazed_terracotta", "y": 270 }
         }
         */
-        public MCBlockVariant(MCBlockState blockState, String variantName, JToken value)
+        public MCBlockVariant(MCBlockState blockState, string variantName, JToken value, MCBlockModelCollection blockModels)
         {
             this.blockState = blockState;
             Name = variantName;
@@ -48,36 +48,35 @@ namespace MCPixelArtConverter
             switch (value.Type)
             {
                 case JTokenType.Object:
-                    models.Add(CreateModelFromJson(value));
+                    models.Add(CreateModelFromJson(blockModels, value));
                     break;
                 case JTokenType.Array:
                     foreach (JObject modelObject in (JArray) value)
                     {
-                        models.Add(CreateModelFromJson(modelObject));
+                        models.Add(CreateModelFromJson(blockModels, modelObject));
                     }
                     break;
                 default:
                     throw new ArgumentException("Invalid Jtoken type " + value.Type);
             }
-
         }
 
-        private MCBlockModel CreateModelFromJson(JToken value)
+        private MCBlockModel CreateModelFromJson(MCBlockModelCollection blockModels, JToken value)
         {
             IDictionary<string, JToken> variantsDict = (JObject)value;
             jsonProperties = variantsDict.ToDictionary(pair => pair.Key, pair => pair.Value);
-            String fileName = jsonProperties["model"].ToString();
-            return new MCBlockModel(blockState.BaseFolder, fileName);
+            string fileName = jsonProperties["model"].ToString();
+            return blockModels.FromFile(fileName);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
-            return json.ToString();
+            return blockState.FileName + " " + Name;
         }
 
-        public Bitmap getTexture(Sides facing)
+        public Bitmap GetSideImage(Sides side)
         {
-            return models[0].getTexture(facing);
+            return models[0].GetSideImage(side);
         }
 
         

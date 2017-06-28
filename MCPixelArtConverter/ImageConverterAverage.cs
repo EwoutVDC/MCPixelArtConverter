@@ -11,7 +11,7 @@ namespace MCPixelArtConverter
     //TODO: add converter that matches each pixel of the block texture to the original image
     class ImageConverterAverage : ImageConverter
     {
-        static String[] validBlocks = {"black_wool",
+        static string[] validBlocks = {"black_wool",
                                        "blue_wool",
                                        "brown_wool",
                                        "cyan_wool",
