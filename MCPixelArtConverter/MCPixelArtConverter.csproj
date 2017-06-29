@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MCBlockModelCollection.cs" />
+    <Compile Include="MCElementFace.cs" />
     <Compile Include="Sides.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

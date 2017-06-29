@@ -21,18 +21,20 @@ namespace MCPixelArtConverter
         Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
         Dictionary<string, string> textureReferences = new Dictionary<string, string>();
         //common textures keys: all, top, bottom, north, south, east, west, side
-        //others: wool (carpet_color.json)
+        //other examples: wool (carpet_color.json)
 
-        List<MCBlockElement> elements;
+        List<MCBlockElement> elements = new List<MCBlockElement>();
 
 
         JObject json; //TODO: this should not be needed in the end
         
         //TODO: Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
+        //By extending the class and making the constructor protected????
         public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
         {
             json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
             
+            //Load or reference parent model
             JToken parentToken = json.GetValue("parent");
             if (parentToken != null)
             {
@@ -40,7 +42,7 @@ namespace MCPixelArtConverter
                 parent = blockModels.FromFile(parentFileName);
             }
 
-            //Load texture bitmaps - TODO lazy loading of texture bitmaps
+            //Load texture bitmaps - TODO lazy loading of texture bitmaps? Not as bad since reuse of models 
             IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
             if (texturesDict != null)
             {
@@ -58,11 +60,23 @@ namespace MCPixelArtConverter
                 }
             }
 
-            //Load elements TODO
+            //Load elements
+            JArray elementsJsonList = (JArray)json["elements"];
+            if (elementsJsonList != null)
+            {
+                foreach (JObject elementJson in elementsJsonList)
+                {
+                    elements.Add(new MCBlockElement(elementJson));
+                }
+            }
         }
 
         public Bitmap GetSideImage(Sides side)
         {
+            //TODO: verify if the final blockmodel always has the textures
+            if (textures.Count == 0)
+                return null;
+
             Bitmap bm;
 
             //TODO: implement multiple face textures, using elements etc

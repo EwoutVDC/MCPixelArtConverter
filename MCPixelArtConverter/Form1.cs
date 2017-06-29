@@ -111,7 +111,8 @@ namespace MCPixelArtConverter
                 return;
             }
 
-            //TODO: construct and keep when changing combobox
+            //TODO: construct converter and keep when changing combobox
+            //TODO: create palette here and pass that to imageconverter, reuse for drawing image below
             ImageConverter imageConverter = new ImageConverterAverage(resourcePack, side);
 
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);

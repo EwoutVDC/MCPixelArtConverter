@@ -14,6 +14,7 @@ namespace MCPixelArtConverter
         public string Name { get; }
         //Only the first model of a variant is used
         List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
+        //TODO: y, uvlock
         
         JToken json;
         Dictionary<string, JToken> jsonProperties; //uvlock, y  etc... not good. These should be properties
