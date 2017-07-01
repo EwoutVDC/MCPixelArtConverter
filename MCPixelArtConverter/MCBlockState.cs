@@ -37,5 +37,10 @@ namespace MCPixelArtConverter
 
             return textures;
         }
+
+        public override string ToString()
+        {
+            return FileName;
+        }
     }
 }

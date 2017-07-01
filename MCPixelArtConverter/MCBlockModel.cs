@@ -14,7 +14,6 @@ namespace MCPixelArtConverter
     {
         const string ModelFolderPath = "models\\block\\";
         const string TextureFolderPath = "textures\\";
-        //TODO blockstate backpointer needed???
 
         //If a parent is set, that contains all elements. They can't be altered by children!
         MCBlockModel parent = null;
@@ -26,15 +25,12 @@ namespace MCPixelArtConverter
         Dictionary<string, string> textureReferences = new Dictionary<string, string>();
         //common textures keys: all, top, bottom, north, south, east, west, side
         //other examples: wool (carpet_color.json)
-
-
-        JObject json; //TODO: this should not be needed in the end
-        
+                
         //TODO: Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
         //By extending the class and making the constructor protected????
         public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
         {
-            json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
+            JObject json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
             Name = modelFileName;
             
             //Load or reference parent model
@@ -76,7 +72,6 @@ namespace MCPixelArtConverter
 
         public Bitmap GetSideImage(Sides side)
         {
-            //TODO: verify if the final blockmodel always has the textures
             if (textures.Count == 0)
                 return null;
 

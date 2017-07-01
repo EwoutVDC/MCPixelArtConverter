@@ -45,7 +45,6 @@ namespace MCPixelArtConverter
         public MCBlockVariant[,] Convert(Bitmap image, Size size)
         {            
             Bitmap scaledImage = new Bitmap(image, size);
-            //TODO: better way to convert image: Create palette with blocks, use GDI+ Bitmap.ConvertFormat (C++)??
 
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
 

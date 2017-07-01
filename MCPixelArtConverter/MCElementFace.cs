@@ -61,7 +61,6 @@ namespace MCPixelArtConverter
             {
                 RotateFlipType flipType = RotateFlipType.RotateNoneFlipNone;
                 RectangleF rect = new RectangleF(Math.Min(UMin, UMax), Math.Min(VMin, VMax), Math.Abs(UMax - UMin), Math.Abs(VMax - VMin));
-                //TODO: Out of memory here for certain blocks/sides?? and when converting
                 if (UMax < UMin)
                 {
                     if (VMax < VMin)

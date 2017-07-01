@@ -64,9 +64,7 @@ namespace MCPixelArtConverter
             Bitmap sideFace = faces[side].GetBitmap(textures, textureReferences);
             if (sideFace == null)
                 return;
-
-
-            //TODO: this does not update the image, make it an out parameter?
+            
             Graphics g = Graphics.FromImage(image);
             g.DrawImage(sideFace, GetImageArea(side));
         }

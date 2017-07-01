@@ -88,8 +88,6 @@ namespace MCPixelArtConverter
         {
             Double width;
 
-            //TODO: This shouldn't change the value: ie 128/250 -> 127
-
             if (image != null && Double.TryParse(txtWidth.Text, out width))
             {
                 Double scale = width * 100 / image.Width;
@@ -204,8 +202,7 @@ namespace MCPixelArtConverter
 
             textureForm.SetImage(resourcePack.getBlockState(comboBox1.SelectedItem.ToString()).GetSideImages(side).First().Value);
 
-            textureForm.Show(); //TODO: fix cannot access disposed object after closing window
-
+            textureForm.Show();
         }
     }
 }
