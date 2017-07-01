@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;   
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -48,7 +48,8 @@ namespace MCPixelArtConverter
             {
                 foreach (var kv in blockState.GetSideImages(facing))
                 {
-                    textures.Add(kv.Key, kv.Value);
+                    if (kv.Value != null)
+                        textures.Add(kv.Key, kv.Value);
                 }
             }
             return textures;

@@ -18,7 +18,7 @@ namespace MCPixelArtConverter
             InitializeComponent();
         }
 
-        public void setImage(Bitmap image)
+        public void SetImage(Bitmap image)
         {
             pictureBox1.Image = image;
         }

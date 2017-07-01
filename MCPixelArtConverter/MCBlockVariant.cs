@@ -72,7 +72,7 @@ namespace MCPixelArtConverter
 
         public override string ToString()
         {
-            return blockState.FileName + " " + Name;
+            return blockState.FileName + "_" + Name;
         }
 
         public Bitmap GetSideImage(Sides side)

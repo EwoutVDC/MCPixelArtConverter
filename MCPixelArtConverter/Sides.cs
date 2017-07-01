@@ -8,11 +8,11 @@ namespace MCPixelArtConverter
 {
     enum Sides
     {
-        Down,
-        Up,
-        North,
-        South,
-        West,
-        East
+        Down, //Negative y
+        Up, //Positive y
+        North, //Negative z
+        South, //Positive z
+        West, //Negative x
+        East //Positive x
     }
 }

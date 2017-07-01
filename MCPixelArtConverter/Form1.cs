@@ -15,11 +15,12 @@ namespace MCPixelArtConverter
     {
         //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
-        MCResourcePack resourcePack;
+        //string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
+        Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> palettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
         
         public MCPACMainForm()
         {
@@ -33,11 +34,15 @@ namespace MCPixelArtConverter
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             if (!string.IsNullOrEmpty(baseFolderName))
                 folderBrowser.SelectedPath = baseFolderName;
-            folderBrowser.ShowDialog();
+
+            if (folderBrowser.ShowDialog() == DialogResult.Cancel)
+                return;
 
             baseFolderName = folderBrowser.SelectedPath + "\\";
 
             resourcePack = new MCResourcePack(baseFolderName);
+
+            comboBox1.Items.AddRange(resourcePack.getBlockNames().ToArray());
 
             Console.WriteLine("Done loading block info");
         }
@@ -45,7 +50,8 @@ namespace MCPixelArtConverter
         private void btnLoadPicture_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileBrowser = new OpenFileDialog();
-            fileBrowser.ShowDialog();
+            if (fileBrowser.ShowDialog() == DialogResult.Cancel)
+                return;
 
             if (fileBrowser.CheckFileExists)
             {
@@ -105,15 +111,21 @@ namespace MCPixelArtConverter
         private void btnConvert_Click(object sender, EventArgs e)
         {
             Sides side;
-            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
-            {
-                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
-                return;
-            }
 
-            //TODO: construct converter and keep when changing combobox
-            //TODO: create palette here and pass that to imageconverter, reuse for drawing image below
-            ImageConverter imageConverter = new ImageConverterAverage(resourcePack, side);
+            if (!CheckResourcePack())
+                return;
+
+            if (!TryGetSide(out side))
+                return;
+
+            //TODO: construct converter and keep (in map, lazy loaded) when changing combobox. Discard when reloading block info
+            Dictionary<MCBlockVariant, Bitmap> palette;
+            if (!palettes.TryGetValue(side, out palette))
+            {
+                palette = resourcePack.GetPalette(side);
+                palettes.Add(side, palette);
+            }
+            ImageConverter imageConverter = new ImageConverterAverage(palette);
 
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);
 
@@ -123,13 +135,77 @@ namespace MCPixelArtConverter
             {
                 for (int h = 0; h < scaledSize.Height; h++)
                 {
-                    g.DrawImage(blocks[w, h].GetSideImage(side), new Point(16 * w, 16 * h));
+                    g.DrawImage(palette[blocks[w, h]], new Point(16 * w, 16 * h));
                 }
             }
 
             MCPACImageForm form = new MCPACImageForm();
-            form.setImage(pixelArtImage);
+            form.SetImage(pixelArtImage);
             form.Show();
+        }
+
+        private bool TryGetSide(out Sides side)
+        {
+            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
+            {
+                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckResourcePack()
+        {
+            if (resourcePack == null)
+            {
+                MessageBox.Show("Load block info first!");
+                return false;
+            }
+            return true;
+        }
+
+        private Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides side)
+        {
+            if (!CheckResourcePack())
+                return new Dictionary<MCBlockVariant, Bitmap>();
+
+            Dictionary<MCBlockVariant, Bitmap> palette;
+            if (!palettes.TryGetValue(side, out palette))
+            {
+                palette = resourcePack.GetPalette(side);
+                palettes.Add(side, palette);
+            }
+            return palette;
+        }
+
+        private void btnSelectBlocks_Click(object sender, EventArgs e)
+        {
+            Sides side;
+
+            if (!CheckResourcePack())
+                return;
+
+            if (!TryGetSide(out side))
+                return;
+
+            MCPaletteForm paletteForm = new MCPaletteForm();
+            paletteForm.SetPalette(GetPalette(side));
+
+            paletteForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MCPACImageForm textureForm = new MCPACImageForm();
+
+            Sides side;
+            if (!TryGetSide(out side))
+                return;
+
+            textureForm.SetImage(resourcePack.getBlockState(comboBox1.SelectedItem.ToString()).GetSideImages(side).First().Value);
+
+            textureForm.Show(); //TODO: fix cannot access disposed object after closing window
+
         }
     }
 }

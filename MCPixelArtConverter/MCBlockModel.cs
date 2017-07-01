@@ -16,14 +16,16 @@ namespace MCPixelArtConverter
         const string TextureFolderPath = "textures\\";
         //TODO blockstate backpointer needed???
 
+        //If a parent is set, that contains all elements. They can't be altered by children!
         MCBlockModel parent = null;
+        public String Name { get; }
+        //Element represent the 3d blocks that the block is assembled from.
+        List<MCBlockElement> elements = new List<MCBlockElement>();
 
         Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
         Dictionary<string, string> textureReferences = new Dictionary<string, string>();
         //common textures keys: all, top, bottom, north, south, east, west, side
         //other examples: wool (carpet_color.json)
-
-        List<MCBlockElement> elements = new List<MCBlockElement>();
 
 
         JObject json; //TODO: this should not be needed in the end
@@ -33,6 +35,7 @@ namespace MCPixelArtConverter
         public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
         {
             json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
+            Name = modelFileName;
             
             //Load or reference parent model
             JToken parentToken = json.GetValue("parent");
@@ -77,21 +80,51 @@ namespace MCPixelArtConverter
             if (textures.Count == 0)
                 return null;
 
-            Bitmap bm;
+            Bitmap bm = new Bitmap(16,16);
 
-            //TODO: implement multiple face textures, using elements etc
-            if (!textures.TryGetValue("all", out bm))
-            {
-                //throw new ApplicationException("Could not compute texture");
-                return null;
-            }
+            //TODO: this is not entirely correct yet, see cauldron sides etc
+            UpdateSideImage(side, bm, textures, textureReferences);
 
             return bm;
         }
 
+        void UpdateSideImage(Sides side, Bitmap bm, Dictionary<string, Bitmap> textures, Dictionary<string, string> textureReferences)
+        {
+            //merge texture maps, keeping properties from child
+            foreach(KeyValuePair<string, Bitmap> kv in this.textures)
+            {
+                if (!textures.ContainsKey(kv.Key))
+                    textures.Add(kv.Key, kv.Value);
+            }
+            foreach (KeyValuePair<string, string> kv in this.textureReferences)
+            {
+                if (!textureReferences.ContainsKey(kv.Key))
+                    textureReferences.Add(kv.Key, kv.Value);
+            }
+
+            if (elements.Count == 0)
+            {
+                if (parent != null)
+                    parent.UpdateSideImage(side, bm, textures, textureReferences);
+            }
+            else
+            {
+                //Need to order elements depending on chosen side
+                elements.Sort((x, y) => x.GetSortingValue(side).CompareTo(y.GetSortingValue(side)));
+                
+                //Orderering is important here!!! this is not good. ie check cauldron block model
+                //stairs/slabs model are good examples of not completely opaque blocks
+                //TODO: option to filter out blocks with transparent parts?
+                foreach (MCBlockElement element in elements)
+                {
+                    element.UpdateSideImage(side, bm, textures, textureReferences);
+                }
+            }
+        }
+
         public override string ToString()
         {
-            return json.ToString();
+            return Name;
         }
     }
 }

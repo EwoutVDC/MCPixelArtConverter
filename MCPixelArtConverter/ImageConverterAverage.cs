@@ -7,38 +7,17 @@ using System.Threading.Tasks;
 
 namespace MCPixelArtConverter
 {
-    //Average uses the average color of each block texture as one pixel
     //TODO: add converter that matches each pixel of the block texture to the original image
+    //Average uses the average color of each block texture as one pixel
     class ImageConverterAverage : ImageConverter
     {
-        static string[] validBlocks = {"black_wool",
-                                       "blue_wool",
-                                       "brown_wool",
-                                       "cyan_wool",
-                                       "gray_wool",
-                                       "green_wool",
-                                       "light_blue_wool",
-                                       "lime_wool",
-                                       "magenta_wool",
-                                       "orange_wool",
-                                       "pink_wool",
-                                       "purple_wool",
-                                       "red_wool",
-                                       "silver_wool",
-                                       "white_wool",
-                                       "yellow_wool" };
-
-        MCResourcePack resourcePack;
-
         Dictionary<MCBlockVariant, Color> averageColors = new Dictionary<MCBlockVariant, Color>();
 
-        public ImageConverterAverage(MCResourcePack rp, Sides facing)
+        public ImageConverterAverage(Dictionary<MCBlockVariant, Bitmap> palette)
         {
-            resourcePack = rp;
-
-            foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in rp.GetPalette(facing))
+            foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
             {
-                Int64 r = 0, g = 0, b = 0;
+                Int64 r = 0, g = 0, b = 0, a = 0;
                 Bitmap bm = kv.Value;
                 if (bm == null)
                     continue; //Could not get a good texture for this variant from the facing side
@@ -47,16 +26,19 @@ namespace MCPixelArtConverter
                 {
                     for (int h = 0; h < bm.Height; h++)
                     {
+                        a += bm.GetPixel(w, h).A;
                         r += bm.GetPixel(w, h).R;
                         g += bm.GetPixel(w, h).G;
                         b += bm.GetPixel(w, h).B;
                     }
                 }
+                a /= (bm.Width * bm.Height);
                 r /= (bm.Width * bm.Height);
                 g /= (bm.Width * bm.Height);
                 b /= (bm.Width * bm.Height);
 
-                averageColors.Add(kv.Key, Color.FromArgb((int)r, (int)g, (int)b));
+                
+                averageColors.Add(kv.Key, Color.FromArgb((int)a, (int)r, (int)g, (int)b));
             }
         }
 
@@ -87,7 +69,10 @@ namespace MCPixelArtConverter
             foreach (KeyValuePair<MCBlockVariant, Color> variantColor in averageColors)
             {
                 Color c = variantColor.Value;
-                Double diff = Math.Pow(pixel.R - c.R, 2) + Math.Pow(pixel.G - c.G, 2) + Math.Pow(pixel.B - c.B, 2);
+                Double diff = Math.Pow(pixel.A - c.A, 2) + //TODO: option to not include alpha in comparison? tends to get bad blocks
+                              Math.Pow(pixel.R - c.R, 2) +
+                              Math.Pow(pixel.G - c.G, 2) +
+                              Math.Pow(pixel.B - c.B, 2);
                 if (diff < minDiffScore)
                 {
                     bestVariant = variantColor.Key;

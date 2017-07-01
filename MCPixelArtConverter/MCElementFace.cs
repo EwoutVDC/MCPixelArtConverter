@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,26 +10,27 @@ namespace MCPixelArtConverter
 {
     class MCElementFace
     {
-        public string TextureReference { get; }
-        //uv coords represent area of the texture that is used for this element face
-        //(0,0) is topleft of texture
-        public Double UMin { get; }
-        public Double UMax { get; }
-        public Double VMin { get; }
-        public Double VMax { get; }
+        public string TextureName { get; }
+        //uv coords represent area of the texture that is used (cut out) for this element face
+        //(0,0) is topleft of texture. Default is (0,0) -> (16,16)
+        //if Umax < Umin, the texture is rotated TODO continue here, this can crash for ie door_bottom from north
+        public float UMin { get; }
+        public float UMax { get; }
+        public float VMin { get; }
+        public float VMax { get; }
         public Int16 Rotation { get; }
         //cullface not used for this application
 
         public MCElementFace(JObject json)
         {
-            TextureReference = json["texture"].ToString();
+            TextureName = json["texture"].ToString();
             JArray uv = (JArray)json["uv"];
             if (uv != null)
             {
-                UMin = Double.Parse(uv[0].ToString());
-                VMin = Double.Parse(uv[1].ToString());
-                UMax = Double.Parse(uv[2].ToString());
-                VMax = Double.Parse(uv[3].ToString());
+                UMin = float.Parse(uv[0].ToString());
+                VMin = float.Parse(uv[1].ToString());
+                UMax = float.Parse(uv[2].ToString());
+                VMax = float.Parse(uv[3].ToString());
             }
             else
             {
@@ -40,6 +42,49 @@ namespace MCPixelArtConverter
             if (json.TryGetValue("rotation", out rotationJson))
             {
                 Rotation = Int16.Parse(rotationJson.ToString());
+            }
+        }
+
+        public Bitmap GetBitmap(Dictionary<string, Bitmap> textures, Dictionary<string, string> textureReferences)
+        {
+            return FindBitmap(TextureName, textures, textureReferences);
+        }
+
+        Bitmap FindBitmap(string name, Dictionary<string, Bitmap> textures, Dictionary<string, string> textureReferences)
+        {
+            if (name.StartsWith("#"))
+            {
+                name = name.Substring(1);
+            }
+
+            if (textures.ContainsKey(name))
+            {
+                RotateFlipType flipType = RotateFlipType.RotateNoneFlipNone;
+                RectangleF rect = new RectangleF(Math.Min(UMin, UMax), Math.Min(VMin, VMax), Math.Abs(UMax - UMin), Math.Abs(VMax - VMin));
+                //TODO: Out of memory here for certain blocks/sides?? and when converting
+                if (UMax < UMin)
+                {
+                    if (VMax < VMin)
+                        flipType = RotateFlipType.RotateNoneFlipXY;
+                    else
+                        flipType = RotateFlipType.RotateNoneFlipX;
+                }
+                else if (VMax < VMin)
+                {
+                    flipType = RotateFlipType.RotateNoneFlipY;
+                }
+
+                Bitmap bm = textures[name].Clone(rect, textures[name].PixelFormat);
+                bm.RotateFlip(flipType);
+                return bm;
+            }
+            else if (textureReferences.ContainsKey(name))
+            {
+                return FindBitmap(textureReferences[name], textures, textureReferences);
+            }
+            else
+            {
+                return null;
             }
         }
     }
