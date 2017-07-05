@@ -40,10 +40,6 @@
             this.scaleTrackBar = new System.Windows.Forms.TrackBar();
             this.lblScaleValue = new System.Windows.Forms.Label();
             this.btnSelectBlocks = new System.Windows.Forms.Button();
-            this.cmbFacing = new System.Windows.Forms.ComboBox();
-            this.lblSide = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -168,50 +164,11 @@
             this.btnSelectBlocks.UseVisualStyleBackColor = true;
             this.btnSelectBlocks.Click += new System.EventHandler(this.btnSelectBlocks_Click);
             // 
-            // cmbFacing
-            // 
-            this.cmbFacing.FormattingEnabled = true;
-            this.cmbFacing.Location = new System.Drawing.Point(230, 43);
-            this.cmbFacing.Name = "cmbFacing";
-            this.cmbFacing.Size = new System.Drawing.Size(105, 21);
-            this.cmbFacing.TabIndex = 21;
-            // 
-            // lblSide
-            // 
-            this.lblSide.AutoSize = true;
-            this.lblSide.Location = new System.Drawing.Point(168, 48);
-            this.lblSide.Name = "lblSide";
-            this.lblSide.Size = new System.Drawing.Size(56, 13);
-            this.lblSide.TabIndex = 22;
-            this.lblSide.Text = "Block side";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 75);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 23;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(139, 75);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "show texture";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(589, 510);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.lblSide);
-            this.Controls.Add(this.cmbFacing);
             this.Controls.Add(this.btnSelectBlocks);
             this.Controls.Add(this.lblScaleValue);
             this.Controls.Add(this.scaleTrackBar);
@@ -247,10 +204,6 @@
         private System.Windows.Forms.TrackBar scaleTrackBar;
         private System.Windows.Forms.Label lblScaleValue;
         private System.Windows.Forms.Button btnSelectBlocks;
-        private System.Windows.Forms.ComboBox cmbFacing;
-        private System.Windows.Forms.Label lblSide;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button1;
     }
 }
 

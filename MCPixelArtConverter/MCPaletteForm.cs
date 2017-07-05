@@ -13,24 +13,46 @@ namespace MCPixelArtConverter
     partial class MCPaletteForm : Form
     {
         Dictionary<string, Bitmap> palette = new Dictionary<string, Bitmap>();
-        Dictionary<string, List<MCBlockVariant>> variants = new Dictionary<string, List<MCBlockVariant>>();
+        Dictionary<string, List<MCBlockVariant>> variantsForBlockState = new Dictionary<string, List<MCBlockVariant>>();
 
-        public MCPaletteForm()
+        MCPACMainForm parentForm;
+        MCResourcePack resourcePack;
+
+        Sides selectedSide;
+
+        public MCPaletteForm(MCPACMainForm parentForm, MCResourcePack rp)
         {
             InitializeComponent();
+
+            this.parentForm = parentForm;
+            resourcePack = rp;
+
+            cmbFacing.DataSource = Enum.GetValues(typeof(Sides));
+            cmbFacing.SelectedItem = Sides.Up;
+            selectedSide = Sides.Up;
+            checkedListBoxBlockStates.Items.AddRange(resourcePack.getBlockNames().ToArray());
         }
 
-        public void SetPalette(Dictionary<MCBlockVariant, Bitmap> palette)
+        private bool TryGetSide(out Sides side)
         {
-            //TODO: this list is way to big, perhaps split blockstate and variant to a different list?
+            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
+            {
+                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
+                return false;
+            }
+            return true;
+        }
+
+        private void SetPalette(Dictionary<MCBlockVariant, Bitmap> palette)
+        {
+            this.palette.Clear();
             foreach (KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
             {
-                if (!variants.ContainsKey(kv.Key.blockState.ToString()))
+                if (!variantsForBlockState.ContainsKey(kv.Key.blockState.ToString()))
                 {
-                    variants.Add(kv.Key.blockState.ToString(), new List<MCBlockVariant>());
-                    checkedListBoxBlockStates.Items.Add(kv.Key.blockState.ToString());
+                    variantsForBlockState.Add(kv.Key.blockState.ToString(), new List<MCBlockVariant>());
                 }
-                variants[kv.Key.blockState.ToString()].Add(kv.Key);
+                variantsForBlockState[kv.Key.blockState.ToString()].Add(kv.Key);
 
                 this.palette.Add(kv.Key.ToString(), kv.Value);
             }
@@ -39,12 +61,33 @@ namespace MCPixelArtConverter
         private void checkedListBoxBlockVariants_SelectedIndexChanged(object sender, EventArgs e)
         {
             checkedListBoxVariants.Items.Clear();
-            checkedListBoxVariants.Items.AddRange(variants[checkedListBoxBlockStates.SelectedItem.ToString()].ToArray());
+            List<MCBlockVariant> variantsForBlockState;
+            if (!this.variantsForBlockState.TryGetValue(checkedListBoxBlockStates.SelectedItem.ToString(), out variantsForBlockState))
+                return;
+            checkedListBoxVariants.Items.AddRange(variantsForBlockState.ToArray());
         }
 
         private void checkedListBoxVariants_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pictureBox1.Image = palette[checkedListBoxVariants.SelectedItem.ToString()];
+            SetTextureImage(checkedListBoxVariants.SelectedItem);
+        }
+
+        private void SetTextureImage(object selectedVariant)
+        {
+            if (selectedVariant == null)
+                textureImage.Image = null;
+            else
+                textureImage.Image = palette[selectedVariant.ToString()];
+        }
+
+        private void cmbFacing_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //TODO: this is not yet returned to the main form for the image converter. Can we use the resourcePack for that??
+            if (!TryGetSide(out selectedSide))
+                return;
+            SetPalette(resourcePack.GetPalette(selectedSide));
+            SetTextureImage(checkedListBoxVariants.SelectedItem);
+            parentForm.SetSelectedSide(selectedSide);
         }
     }
 }

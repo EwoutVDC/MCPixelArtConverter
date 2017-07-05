@@ -11,22 +11,25 @@ using System.Windows.Forms;
 
 namespace MCPixelArtConverter
 {
-    public partial class MCPACMainForm : Form
+    partial class MCPACMainForm : Form
     {
-        //TODO: remove uses of this foldername and use resourcepack instead, save folder in form to resume there when loading another one
+        //TODO: save/load baseFolderName to/from config json file?
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        //string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
-        Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> palettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
+        Sides selectedSide = Sides.Up;
         
         public MCPACMainForm()
         {
             InitializeComponent();
+        }
 
-            cmbFacing.DataSource = Enum.GetValues(typeof(Sides));
+        public void SetSelectedSide(Sides side)
+        {
+            selectedSide = side;
         }
 
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
@@ -41,8 +44,6 @@ namespace MCPixelArtConverter
             baseFolderName = folderBrowser.SelectedPath + "\\";
 
             resourcePack = new MCResourcePack(baseFolderName);
-
-            comboBox1.Items.AddRange(resourcePack.getBlockNames().ToArray());
 
             Console.WriteLine("Done loading block info");
         }
@@ -108,21 +109,11 @@ namespace MCPixelArtConverter
 
         private void btnConvert_Click(object sender, EventArgs e)
         {
-            Sides side;
-
             if (!CheckResourcePack())
                 return;
 
-            if (!TryGetSide(out side))
-                return;
-
             //TODO: construct converter and keep (in map, lazy loaded) when changing combobox. Discard when reloading block info
-            Dictionary<MCBlockVariant, Bitmap> palette;
-            if (!palettes.TryGetValue(side, out palette))
-            {
-                palette = resourcePack.GetPalette(side);
-                palettes.Add(side, palette);
-            }
+            Dictionary<MCBlockVariant, Bitmap> palette = resourcePack.GetPalette(selectedSide);
             ImageConverter imageConverter = new ImageConverterAverage(palette);
 
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);
@@ -142,16 +133,6 @@ namespace MCPixelArtConverter
             form.Show();
         }
 
-        private bool TryGetSide(out Sides side)
-        {
-            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
-            {
-                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
-                return false;
-            }
-            return true;
-        }
-
         private bool CheckResourcePack()
         {
             if (resourcePack == null)
@@ -162,47 +143,14 @@ namespace MCPixelArtConverter
             return true;
         }
 
-        private Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides side)
-        {
-            if (!CheckResourcePack())
-                return new Dictionary<MCBlockVariant, Bitmap>();
-
-            Dictionary<MCBlockVariant, Bitmap> palette;
-            if (!palettes.TryGetValue(side, out palette))
-            {
-                palette = resourcePack.GetPalette(side);
-                palettes.Add(side, palette);
-            }
-            return palette;
-        }
-
         private void btnSelectBlocks_Click(object sender, EventArgs e)
         {
-            Sides side;
-
             if (!CheckResourcePack())
                 return;
 
-            if (!TryGetSide(out side))
-                return;
-
-            MCPaletteForm paletteForm = new MCPaletteForm();
-            paletteForm.SetPalette(GetPalette(side));
+            MCPaletteForm paletteForm = new MCPaletteForm(this, resourcePack);
 
             paletteForm.Show();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MCPACImageForm textureForm = new MCPACImageForm();
-
-            Sides side;
-            if (!TryGetSide(out side))
-                return;
-
-            textureForm.SetImage(resourcePack.getBlockState(comboBox1.SelectedItem.ToString()).GetSideImages(side).First().Value);
-
-            textureForm.Show();
         }
     }
 }

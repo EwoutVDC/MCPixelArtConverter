@@ -77,6 +77,7 @@ namespace MCPixelArtConverter
 
         public Bitmap GetSideImage(Sides side)
         {
+            //TODO: Block variant rotation does not seem to be taken into account
             return models[0].GetSideImage(side);
         }
 

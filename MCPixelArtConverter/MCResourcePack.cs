@@ -14,6 +14,9 @@ namespace MCPixelArtConverter
         Dictionary<String, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
         MCBlockModelCollection blockModels;
 
+        //Cache for palettes for different sides
+        Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> cachedPalettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
+
         public MCResourcePack(String baseFolder)
         {
             baseFolderPath = baseFolder;
@@ -41,18 +44,29 @@ namespace MCPixelArtConverter
             return blockStates.Keys.ToList();
         }
 
-        public Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides facing)
+        private Dictionary<MCBlockVariant, Bitmap> ConstructPalette(Sides side)
         {
-            Dictionary<MCBlockVariant, Bitmap> textures = new Dictionary<MCBlockVariant, Bitmap>();
+            Dictionary<MCBlockVariant, Bitmap> palette = new Dictionary<MCBlockVariant, Bitmap>();
             foreach (MCBlockState blockState in blockStates.Values)
             {
-                foreach (var kv in blockState.GetSideImages(facing))
+                foreach (var kv in blockState.GetSideImages(side))
                 {
                     if (kv.Value != null)
-                        textures.Add(kv.Key, kv.Value);
+                        palette.Add(kv.Key, kv.Value);
                 }
             }
-            return textures;
+            return palette;
+        }
+
+        public Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides side)
+        {
+            Dictionary<MCBlockVariant, Bitmap> palette;
+            if (!cachedPalettes.TryGetValue(side, out palette))
+            {
+                palette = ConstructPalette(side);
+                cachedPalettes.Add(side, palette);
+            }
+            return palette;
         }
     }
 }
