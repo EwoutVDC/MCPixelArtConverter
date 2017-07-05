@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,14 @@ namespace MCPixelArtConverter
 
         public ImageConverterAverage(Dictionary<MCBlockVariant, Bitmap> palette)
         {
-            foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
+            //TODO: do this in parallel?
+            //foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
+            Parallel.ForEach(palette, kv =>
             {
                 Int64 r = 0, g = 0, b = 0, a = 0;
                 Bitmap bm = kv.Value;
                 if (bm == null)
-                    continue; //Could not get a good texture for this variant from the facing side
+                    return;
 
                 for (int w = 0; w < bm.Width; w++)
                 {
@@ -37,9 +40,10 @@ namespace MCPixelArtConverter
                 g /= (bm.Width * bm.Height);
                 b /= (bm.Width * bm.Height);
 
-                
+
                 averageColors.Add(kv.Key, Color.FromArgb((int)a, (int)r, (int)g, (int)b));
             }
+            );
         }
 
         public MCBlockVariant[,] Convert(Bitmap image, Size size)
@@ -48,17 +52,70 @@ namespace MCPixelArtConverter
 
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
 
-            for (int w = 0; w < size.Width; w++)
+            object lockobj = new object();
+
+            Parallel.For(0, size.Width, w =>
             {
+                Bitmap scaledImageClone;
+                lock (lockobj)
+                {
+                    scaledImageClone = (Bitmap)scaledImage.Clone(new Rectangle(w, 0, 1, size.Height), scaledImage.PixelFormat);
+                }
                 for (int h = 0; h < size.Height; h++)
                 {
-                    blocks[w,h] = GetBestVariant(scaledImage.GetPixel(w, h));
+                    blocks[w, h] = GetBestVariant(scaledImageClone.GetPixel(0, h));
                 }
             }
+            );
 
             //TODO: apply dithering? => allow to set imageDitherer and use that for different dithering algorithms
+            /*
+             * Interface for dithering: imageDitherer.diffuseError(scaledImage, blocks[w,h], w, h) ?
+             * Probably better to calculate error to diffuse in the converter?
+             * How can that work with a converter that selects a block based on its entire pixel instead of only the average
+             * color?
+             * -> pass original image and chosen block? seems to tightly coupled
+             * -> different ditherers with same algorithm for different converters? i would like to prevent that
+             * 
+             * Dithering is applied on a block level since that is the smallest unit we can change individually
+             * Even if the error calculation is done on pixel level!
+             * 
+             * steps for dithering:
+             * - calculate best block for target pixel/image area (ImageConverter)
+             * - calculate block color error (in ImageConverter since this is different for each converter: ie avg colors vs individual pixels)
+             * - diffuse error to next target pixels/image area
+             *      => ImageDitherer.GetColorOffsetForBlock(image, w,h, out a, out r, out g, out b) ??
+             *         ImageConverter.ApplyColorOffsetForBlock(w,h,a,r,g,b);
+             * - 
+             * 
+             * 
+             */
 
             return blocks;
+        }
+
+
+        //TODO: evaluate this multithreading vs singlethreading vs pixel level multithreading
+        //This might still be usefull for dithering ?
+        MCBlockVariant GetBestVariantParallel(Color pixel)
+        {
+            Double minDiffScore = Double.MaxValue;
+            MCBlockVariant bestVariant = null;
+            Parallel.ForEach(averageColors, variantColor =>
+            {
+                Color c = variantColor.Value;
+                Double diff = Math.Pow(pixel.A - c.A, 2) + //TODO: option to not include alpha in comparison? tends to get bad blocks
+                              Math.Pow(pixel.R - c.R, 2) +
+                              Math.Pow(pixel.G - c.G, 2) +
+                              Math.Pow(pixel.B - c.B, 2);
+                if (diff < minDiffScore)
+                {
+                    bestVariant = variantColor.Key;
+                    minDiffScore = diff;
+                }
+            });
+
+            return bestVariant;
         }
 
         MCBlockVariant GetBestVariant(Color pixel)
