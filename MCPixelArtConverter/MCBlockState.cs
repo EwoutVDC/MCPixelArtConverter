@@ -13,7 +13,7 @@ namespace MCPixelArtConverter
     {
         public string BaseFolder { get; }
         public string FileName { get; }
-        Dictionary<string, MCBlockVariant> Variants = new Dictionary<string, MCBlockVariant>();
+        Dictionary<string, MCBlockVariant> VariantsByName = new Dictionary<string, MCBlockVariant>();
         //multipart blockstates todo
 
         public MCBlockState(string baseFolder, string fileName, MCBlockModelCollection blockModels)
@@ -23,14 +23,14 @@ namespace MCPixelArtConverter
             JObject blockStateJson = JObject.Parse(File.ReadAllText(fileName));
             IDictionary<string, JToken> variantsDict = (JObject)blockStateJson["variants"];
             if (variantsDict != null)
-                Variants = variantsDict.ToDictionary(pair => pair.Key, pair => new MCBlockVariant(this, pair.Key, pair.Value, blockModels));
+                VariantsByName = variantsDict.ToDictionary(pair => pair.Key, pair => new MCBlockVariant(this, pair.Key, pair.Value, blockModels));
         }
 
         public Dictionary<MCBlockVariant, Bitmap> GetSideImages(Sides facing)
         {
             Dictionary<MCBlockVariant, Bitmap> textures = new Dictionary<MCBlockVariant, Bitmap>();
 
-            foreach (MCBlockVariant variant in Variants.Values)
+            foreach (MCBlockVariant variant in VariantsByName.Values)
             {
                 textures.Add(variant, variant.GetSideImage(facing));
             }
@@ -38,9 +38,23 @@ namespace MCPixelArtConverter
             return textures;
         }
 
+        public List<MCBlockVariant> GetVariants()
+        {
+            return VariantsByName.Values.ToList();
+        }
+
         public override string ToString()
         {
             return FileName;
         }
+
+        public void SetSelected(bool selected)
+        {
+            foreach (MCBlockVariant variant in VariantsByName.Values)
+            {
+                variant.Selected = selected;
+            }
+        }
+
     }
 }

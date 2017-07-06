@@ -124,6 +124,9 @@ namespace MCPixelArtConverter
             MCBlockVariant bestVariant = null;
             foreach (KeyValuePair<MCBlockVariant, Color> variantColor in averageColors)
             {
+                if (!variantColor.Key.Selected)
+                    continue;
+
                 Color c = variantColor.Value;
                 Double diff = Math.Pow(pixel.A - c.A, 2) + //TODO: option to not include alpha in comparison? tends to get bad blocks
                               Math.Pow(pixel.R - c.R, 2) +

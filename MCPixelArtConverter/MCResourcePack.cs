@@ -10,15 +10,19 @@ namespace MCPixelArtConverter
 {
     class MCResourcePack
     {
-        String baseFolderPath;
-        Dictionary<String, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
+        string baseFolderPath;
+        Dictionary<string, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
         MCBlockModelCollection blockModels;
+
+        public Sides SelectedSide  {get; set;}
 
         //Cache for palettes for different sides
         Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> cachedPalettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
 
-        public MCResourcePack(String baseFolder)
+        public MCResourcePack(string baseFolder)
         {
+            SelectedSide = Sides.Up; //default side TODO: save to config file and load instead of static default
+
             baseFolderPath = baseFolder;
             if (!Directory.Exists(baseFolderPath + "blockstates\\"))
             {
@@ -27,29 +31,34 @@ namespace MCPixelArtConverter
 
             blockModels = new MCBlockModelCollection(baseFolder);
 
-            foreach (String filename in Directory.GetFiles(baseFolderPath + "blockstates\\", "*.json"))
+            foreach (string filename in Directory.GetFiles(baseFolderPath + "blockstates\\", "*.json"))
             {
                 MCBlockState blockstate = new MCBlockState(baseFolder, filename, blockModels);
                 blockStates.Add(blockstate.FileName, blockstate);
             }
         }
 
-        public MCBlockState getBlockState(String blockStateName)
+        public MCBlockState getBlockState(string blockStateName)
         {
             return blockStates[blockStateName];
         }
 
-        public List<String> getBlockNames()
+        public List<string> getBlockNames()
         {
             return blockStates.Keys.ToList();
         }
 
-        private Dictionary<MCBlockVariant, Bitmap> ConstructPalette(Sides side)
+        public List<MCBlockState> getBlockStates()
+        {
+            return blockStates.Values.ToList();
+        }
+
+        private Dictionary<MCBlockVariant, Bitmap> ConstructPalette()
         {
             Dictionary<MCBlockVariant, Bitmap> palette = new Dictionary<MCBlockVariant, Bitmap>();
             foreach (MCBlockState blockState in blockStates.Values)
             {
-                foreach (var kv in blockState.GetSideImages(side))
+                foreach (var kv in blockState.GetSideImages(SelectedSide))
                 {
                     if (kv.Value != null)
                         palette.Add(kv.Key, kv.Value);
@@ -58,13 +67,13 @@ namespace MCPixelArtConverter
             return palette;
         }
 
-        public Dictionary<MCBlockVariant, Bitmap> GetPalette(Sides side)
+        public Dictionary<MCBlockVariant, Bitmap> GetPalette()
         {
             Dictionary<MCBlockVariant, Bitmap> palette;
-            if (!cachedPalettes.TryGetValue(side, out palette))
+            if (!cachedPalettes.TryGetValue(SelectedSide, out palette))
             {
-                palette = ConstructPalette(side);
-                cachedPalettes.Add(side, palette);
+                palette = ConstructPalette();
+                cachedPalettes.Add(SelectedSide, palette);
             }
             return palette;
         }

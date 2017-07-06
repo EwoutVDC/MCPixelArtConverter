@@ -10,8 +10,9 @@ namespace MCPixelArtConverter
 {
     class MCBlockVariant
     {
-        public MCBlockState blockState { get; }
+        public MCBlockState BlockState { get; }
         public string Name { get; }
+        public bool Selected { get; set; }
         //Only the first model of a variant is used
         List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
         //TODO: y, uvlock
@@ -42,9 +43,10 @@ namespace MCPixelArtConverter
         */
         public MCBlockVariant(MCBlockState blockState, string variantName, JToken value, MCBlockModelCollection blockModels)
         {
-            this.blockState = blockState;
+            BlockState = blockState;
             Name = variantName;
             json = value;
+            Selected = true; //TODO: save selected variants to config file and load here or restore in resourcepack
 
             switch (value.Type)
             {
@@ -72,7 +74,7 @@ namespace MCPixelArtConverter
 
         public override string ToString()
         {
-            return blockState.FileName + "_" + Name;
+            return BlockState.FileName + "_" + Name;
         }
 
         public Bitmap GetSideImage(Sides side)

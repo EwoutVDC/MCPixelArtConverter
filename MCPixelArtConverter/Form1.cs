@@ -15,8 +15,8 @@ namespace MCPixelArtConverter
     {
         //TODO: save/load baseFolderName to/from config json file?
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        //string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
@@ -43,7 +43,13 @@ namespace MCPixelArtConverter
 
             baseFolderName = folderBrowser.SelectedPath + "\\";
 
-            resourcePack = new MCResourcePack(baseFolderName);
+            try
+            {
+                resourcePack = new MCResourcePack(baseFolderName);
+            } catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             Console.WriteLine("Done loading block info");
         }
@@ -112,8 +118,9 @@ namespace MCPixelArtConverter
             if (!CheckResourcePack())
                 return;
 
-            //TODO: construct converter and keep (in map, lazy loaded) when changing combobox. Discard when reloading block info
-            Dictionary<MCBlockVariant, Bitmap> palette = resourcePack.GetPalette(selectedSide);
+            //TODO: construct converter and keep (in Dictionary<Sides, ImageConverter>, lazy loaded) when changing selected side.
+            //Discard when reloading block info
+            Dictionary<MCBlockVariant, Bitmap> palette = resourcePack.GetPalette();
             ImageConverter imageConverter = new ImageConverterAverage(palette);
 
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);
@@ -148,7 +155,7 @@ namespace MCPixelArtConverter
             if (!CheckResourcePack())
                 return;
 
-            MCPaletteForm paletteForm = new MCPaletteForm(this, resourcePack);
+            MCPaletteForm paletteForm = new MCPaletteForm(resourcePack);
 
             paletteForm.Show();
         }

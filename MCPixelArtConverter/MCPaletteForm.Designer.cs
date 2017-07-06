@@ -32,18 +32,20 @@
             this.textureImage = new MCPixelArtConverter.PictureBoxWithSettings();
             this.checkedListBoxVariants = new System.Windows.Forms.CheckedListBox();
             this.lblSide = new System.Windows.Forms.Label();
-            this.cmbFacing = new System.Windows.Forms.ComboBox();
+            this.cmbSide = new System.Windows.Forms.ComboBox();
+            this.btnUnselectAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.textureImage)).BeginInit();
             this.SuspendLayout();
             // 
             // checkedListBoxBlockStates
             // 
             this.checkedListBoxBlockStates.FormattingEnabled = true;
-            this.checkedListBoxBlockStates.Location = new System.Drawing.Point(12, 12);
+            this.checkedListBoxBlockStates.Location = new System.Drawing.Point(12, 42);
             this.checkedListBoxBlockStates.Name = "checkedListBoxBlockStates";
-            this.checkedListBoxBlockStates.Size = new System.Drawing.Size(217, 529);
+            this.checkedListBoxBlockStates.Size = new System.Drawing.Size(217, 499);
             this.checkedListBoxBlockStates.TabIndex = 2;
-            this.checkedListBoxBlockStates.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxBlockVariants_SelectedIndexChanged);
+            this.checkedListBoxBlockStates.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxBlockStates_ItemCheck);
+            this.checkedListBoxBlockStates.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxBlockStates_SelectedIndexChanged);
             // 
             // textureImage
             // 
@@ -62,10 +64,11 @@
             this.checkedListBoxVariants.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkedListBoxVariants.FormattingEnabled = true;
-            this.checkedListBoxVariants.Location = new System.Drawing.Point(235, 12);
+            this.checkedListBoxVariants.Location = new System.Drawing.Point(235, 42);
             this.checkedListBoxVariants.Name = "checkedListBoxVariants";
-            this.checkedListBoxVariants.Size = new System.Drawing.Size(217, 529);
+            this.checkedListBoxVariants.Size = new System.Drawing.Size(217, 499);
             this.checkedListBoxVariants.TabIndex = 4;
+            this.checkedListBoxVariants.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxVariants_ItemCheck);
             this.checkedListBoxVariants.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxVariants_SelectedIndexChanged);
             // 
             // lblSide
@@ -78,23 +81,33 @@
             this.lblSide.TabIndex = 24;
             this.lblSide.Text = "Block side";
             // 
-            // cmbFacing
+            // cmbSide
             // 
-            this.cmbFacing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbFacing.FormattingEnabled = true;
-            this.cmbFacing.Location = new System.Drawing.Point(525, 12);
-            this.cmbFacing.Name = "cmbFacing";
-            this.cmbFacing.Size = new System.Drawing.Size(105, 21);
-            this.cmbFacing.TabIndex = 23;
-            this.cmbFacing.SelectedIndexChanged += new System.EventHandler(this.cmbFacing_SelectedIndexChanged);
+            this.cmbSide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbSide.FormattingEnabled = true;
+            this.cmbSide.Location = new System.Drawing.Point(525, 12);
+            this.cmbSide.Name = "cmbSide";
+            this.cmbSide.Size = new System.Drawing.Size(105, 21);
+            this.cmbSide.TabIndex = 23;
+            // 
+            // btnUnselectAll
+            // 
+            this.btnUnselectAll.Location = new System.Drawing.Point(13, 12);
+            this.btnUnselectAll.Name = "btnUnselectAll";
+            this.btnUnselectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnUnselectAll.TabIndex = 25;
+            this.btnUnselectAll.Text = "Unselect All";
+            this.btnUnselectAll.UseVisualStyleBackColor = true;
+            this.btnUnselectAll.Click += new System.EventHandler(this.btnUnselectAll_Click);
             // 
             // MCPaletteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(790, 567);
+            this.Controls.Add(this.btnUnselectAll);
             this.Controls.Add(this.lblSide);
-            this.Controls.Add(this.cmbFacing);
+            this.Controls.Add(this.cmbSide);
             this.Controls.Add(this.checkedListBoxVariants);
             this.Controls.Add(this.textureImage);
             this.Controls.Add(this.checkedListBoxBlockStates);
@@ -112,6 +125,7 @@
         private PictureBoxWithSettings textureImage;
         private System.Windows.Forms.CheckedListBox checkedListBoxVariants;
         private System.Windows.Forms.Label lblSide;
-        private System.Windows.Forms.ComboBox cmbFacing;
+        private System.Windows.Forms.ComboBox cmbSide;
+        private System.Windows.Forms.Button btnUnselectAll;
     }
 }

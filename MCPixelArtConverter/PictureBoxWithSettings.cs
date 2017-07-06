@@ -16,6 +16,8 @@ namespace MCPixelArtConverter
         public InterpolationMode InterpolationMode { get; set; }
         public PixelOffsetMode PixelOffsetMode { get; set; }
 
+        //TODO: add zoom with scrollwheel
+
         protected override void OnPaint(PaintEventArgs paintEventArgs)
         {
             paintEventArgs.Graphics.InterpolationMode = InterpolationMode;

@@ -11,83 +11,87 @@ using System.Windows.Forms;
 namespace MCPixelArtConverter
 {
     partial class MCPaletteForm : Form
-    {
-        Dictionary<string, Bitmap> palette = new Dictionary<string, Bitmap>();
-        Dictionary<string, List<MCBlockVariant>> variantsForBlockState = new Dictionary<string, List<MCBlockVariant>>();
-
-        MCPACMainForm parentForm;
+    {        
         MCResourcePack resourcePack;
 
-        Sides selectedSide;
-
-        public MCPaletteForm(MCPACMainForm parentForm, MCResourcePack rp)
+        public MCPaletteForm(MCResourcePack rp)
         {
             InitializeComponent();
-
-            this.parentForm = parentForm;
+            
             resourcePack = rp;
 
-            cmbFacing.DataSource = Enum.GetValues(typeof(Sides));
-            cmbFacing.SelectedItem = Sides.Up;
-            selectedSide = Sides.Up;
-            checkedListBoxBlockStates.Items.AddRange(resourcePack.getBlockNames().ToArray());
+            cmbSide.DataSource = Enum.GetValues(typeof(Sides));
+            cmbSide.SelectedItem = resourcePack.SelectedSide;
+            cmbSide.SelectedIndexChanged += cmbSide_SelectedIndexChanged;
+            checkedListBoxBlockStates.Items.AddRange(resourcePack.getBlockStates().ToArray());
+
+            //TODO: save selected blocks to json file and load on first use
+            //save selected blocks to resource pack class and use from there?
+            for (int i = 0; i <= (checkedListBoxBlockStates.Items.Count - 1); i++)
+                checkedListBoxBlockStates.SetItemCheckState(i, CheckState.Checked);
         }
 
-        private bool TryGetSide(out Sides side)
+        private void checkedListBoxBlockStates_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!Enum.TryParse<Sides>(cmbFacing.SelectedValue.ToString(), out side))
-            {
-                MessageBox.Show("Could not parse block side " + cmbFacing.SelectedValue);
-                return false;
-            }
-            return true;
-        }
-
-        private void SetPalette(Dictionary<MCBlockVariant, Bitmap> palette)
-        {
-            this.palette.Clear();
-            foreach (KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
-            {
-                if (!variantsForBlockState.ContainsKey(kv.Key.blockState.ToString()))
-                {
-                    variantsForBlockState.Add(kv.Key.blockState.ToString(), new List<MCBlockVariant>());
-                }
-                variantsForBlockState[kv.Key.blockState.ToString()].Add(kv.Key);
-
-                this.palette.Add(kv.Key.ToString(), kv.Value);
-            }
-        }
-
-        private void checkedListBoxBlockVariants_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            checkedListBoxVariants.Items.Clear();
-            List<MCBlockVariant> variantsForBlockState;
-            if (!this.variantsForBlockState.TryGetValue(checkedListBoxBlockStates.SelectedItem.ToString(), out variantsForBlockState))
+            if (sender == null)
                 return;
-            checkedListBoxVariants.Items.AddRange(variantsForBlockState.ToArray());
+
+            checkedListBoxVariants.Items.Clear();
+            MCBlockState blockState = (MCBlockState)checkedListBoxBlockStates.SelectedItem;
+            MCBlockVariant[] variants = blockState.GetVariants().ToArray();
+            checkedListBoxVariants.Items.AddRange(variants);
+
+            for (int i = 0; i <= (checkedListBoxVariants.Items.Count - 1); i++)
+                checkedListBoxVariants.SetItemCheckState(i, variants[i].Selected == true ? CheckState.Checked : CheckState.Unchecked);
         }
 
         private void checkedListBoxVariants_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetTextureImage(checkedListBoxVariants.SelectedItem);
+            SetTextureImage((MCBlockVariant)checkedListBoxVariants.SelectedItem);
         }
 
-        private void SetTextureImage(object selectedVariant)
+        private void SetTextureImage(MCBlockVariant selectedVariant)
         {
             if (selectedVariant == null)
                 textureImage.Image = null;
             else
-                textureImage.Image = palette[selectedVariant.ToString()];
+            {
+                textureImage.Image = resourcePack.GetPalette()[selectedVariant];
+            }
         }
 
-        private void cmbFacing_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbSide_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //TODO: this is not yet returned to the main form for the image converter. Can we use the resourcePack for that??
-            if (!TryGetSide(out selectedSide))
-                return;
-            SetPalette(resourcePack.GetPalette(selectedSide));
-            SetTextureImage(checkedListBoxVariants.SelectedItem);
-            parentForm.SetSelectedSide(selectedSide);
+            resourcePack.SelectedSide = (Sides)cmbSide.SelectedValue;
+            SetTextureImage((MCBlockVariant)checkedListBoxVariants.SelectedItem);
+        }
+
+        private void checkedListBoxBlockStates_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            MCBlockState blockState = (MCBlockState) checkedListBoxBlockStates.Items[e.Index];
+            blockState.SetSelected(e.NewValue == CheckState.Checked);
+
+            //just change checkbox, the variant change is already done from the blockstate
+            checkedListBoxVariants.ItemCheck -= checkedListBoxVariants_ItemCheck;
+            for (int i = 0; i <= (checkedListBoxVariants.Items.Count - 1); i++)
+            { 
+                checkedListBoxVariants.SetItemCheckState(i, e.NewValue);
+            }
+            checkedListBoxVariants.ItemCheck += checkedListBoxVariants_ItemCheck;
+        }
+
+        private void checkedListBoxVariants_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            MCBlockVariant variant = (MCBlockVariant)checkedListBoxVariants.Items[e.Index];
+            variant.Selected = (e.NewValue == CheckState.Checked);
+        }
+
+        private void btnUnselectAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i <= (checkedListBoxBlockStates.Items.Count - 1); i++)
+            {
+                checkedListBoxBlockStates.SetItemCheckState(i, CheckState.Unchecked);
+            }
         }
     }
 }
