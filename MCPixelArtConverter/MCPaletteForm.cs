@@ -24,9 +24,7 @@ namespace MCPixelArtConverter
             cmbSide.SelectedItem = resourcePack.SelectedSide;
             cmbSide.SelectedIndexChanged += cmbSide_SelectedIndexChanged;
             checkedListBoxBlockStates.Items.AddRange(resourcePack.getBlockStates().ToArray());
-
-            //TODO: save selected blocks to json file and load on first use
-            //save selected blocks to resource pack class and use from there?
+            
             for (int i = 0; i <= (checkedListBoxBlockStates.Items.Count - 1); i++)
                 checkedListBoxBlockStates.SetItemCheckState(i, CheckState.Checked);
         }
@@ -88,10 +86,17 @@ namespace MCPixelArtConverter
 
         private void btnUnselectAll_Click(object sender, EventArgs e)
         {
+            //TODO: allow saving and loading preset selections (none, all, survival, wool, custom)
+            //loaded from plain text file with list of variant names
             for (int i = 0; i <= (checkedListBoxBlockStates.Items.Count - 1); i++)
             {
                 checkedListBoxBlockStates.SetItemCheckState(i, CheckState.Unchecked);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
