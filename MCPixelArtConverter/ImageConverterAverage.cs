@@ -16,14 +16,14 @@ namespace MCPixelArtConverter
 
         public ImageConverterAverage(Dictionary<MCBlockVariant, Bitmap> palette)
         {
-            //TODO: do this in parallel?
-            //foreach(KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
-            Parallel.ForEach(palette, kv =>
+            //TODO: do this in parallel? it breaks the loading somehow
+            foreach (KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
+                //Parallel.ForEach(palette, kv =>
             {
                 Int64 r = 0, g = 0, b = 0, a = 0;
                 Bitmap bm = kv.Value;
                 if (bm == null)
-                    return;
+                    continue;
 
                 for (int w = 0; w < bm.Width; w++)
                 {
@@ -43,7 +43,7 @@ namespace MCPixelArtConverter
 
                 averageColors.Add(kv.Key, Color.FromArgb((int)a, (int)r, (int)g, (int)b));
             }
-            );
+            //);
         }
 
         public MCBlockVariant[,] Convert(Bitmap image, Size size)
@@ -53,6 +53,8 @@ namespace MCPixelArtConverter
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
 
             object lockobj = new object();
+
+            //TODO: look into progress bar?
 
             Parallel.For(0, size.Width, w =>
             {
@@ -104,7 +106,7 @@ namespace MCPixelArtConverter
             Parallel.ForEach(averageColors, variantColor =>
             {
                 Color c = variantColor.Value;
-                Double diff = Math.Pow(pixel.A - c.A, 2) + //TODO: option to not include alpha in comparison? tends to get bad blocks
+                Double diff = Math.Pow(pixel.A - c.A, 2) +
                               Math.Pow(pixel.R - c.R, 2) +
                               Math.Pow(pixel.G - c.G, 2) +
                               Math.Pow(pixel.B - c.B, 2);
@@ -127,8 +129,9 @@ namespace MCPixelArtConverter
                 if (!variantColor.Key.Selected)
                     continue;
 
+                //TODO: verify color matching. not very convincing on picture
                 Color c = variantColor.Value;
-                Double diff = Math.Pow(pixel.A - c.A, 2) + //TODO: option to not include alpha in comparison? tends to get bad blocks
+                Double diff = Math.Pow(pixel.A - c.A, 2) + 
                               Math.Pow(pixel.R - c.R, 2) +
                               Math.Pow(pixel.G - c.G, 2) +
                               Math.Pow(pixel.B - c.B, 2);
