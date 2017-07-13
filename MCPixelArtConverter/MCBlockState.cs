@@ -56,5 +56,33 @@ namespace MCPixelArtConverter
             }
         }
 
+        public bool GetSelected()
+        {
+            foreach (MCBlockVariant variant in VariantsByName.Values)
+            {
+                if (variant.Selected)
+                    return true;
+            }
+            return false;
+        }
+
+        public void SaveBlockSelection(StreamWriter selectionFile)
+        {
+            foreach (var blockVariant in VariantsByName)
+            {
+                if (blockVariant.Value.Selected)
+                    selectionFile.WriteLine(this.FileName + "\t" + blockVariant.Value.Name);
+            }
+        }
+
+        public void LoadBlockSelection(List<string> selectedVariantNames)
+        {
+            foreach (var selectedVariantName in selectedVariantNames)
+            {
+                MCBlockVariant selectedVariant;
+                if (VariantsByName.TryGetValue(selectedVariantName, out selectedVariant))
+                    selectedVariant.Selected = true;
+            }
+        }
     }
 }

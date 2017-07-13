@@ -1,0 +1,16 @@
+black_wool	normal
+blue_wool	normal
+brown_wool	normal
+cyan_wool	normal
+gray_wool	normal
+green_wool	normal
+light_blue_wool	normal
+lime_wool	normal
+magenta_wool	normal
+orange_wool	normal
+pink_wool	normal
+purple_wool	normal
+red_wool	normal
+silver_wool	normal
+white_wool	normal
+yellow_wool	normal

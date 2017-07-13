@@ -14,7 +14,7 @@ namespace MCPixelArtConverter
         Dictionary<string, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
         MCBlockModelCollection blockModels;
 
-        public Sides SelectedSide  {get; set;}
+        public Sides SelectedSide { get; set; }
 
         //Cache for palettes for different sides
         Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> cachedPalettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
@@ -67,6 +67,12 @@ namespace MCPixelArtConverter
             return palette;
         }
 
+        public void UnselectAll()
+        {
+            foreach (var kv in blockStates)
+                kv.Value.SetSelected(false);
+        }
+
         public Dictionary<MCBlockVariant, Bitmap> GetPalette()
         {
             Dictionary<MCBlockVariant, Bitmap> palette;
@@ -76,6 +82,50 @@ namespace MCPixelArtConverter
                 cachedPalettes.Add(SelectedSide, palette);
             }
             return palette;
+        }
+
+        public void SaveBlockSelection(string name)
+        {
+            StreamWriter selectionFile;
+            using (selectionFile = new StreamWriter(name))
+            {
+                foreach (var blockState in blockStates)
+                {
+                    blockState.Value.SaveBlockSelection(selectionFile);
+                }
+            }
+        }
+
+        public void LoadBlockSelection(string name)
+        {
+            StreamReader selectionFile;
+            Dictionary<string, List<string>> selectedVariantsForBlockState = new Dictionary<string, List<string>>();
+            //TODO: handle FileNotFoundException?
+            using (selectionFile = new StreamReader(name))
+            {
+                string selectionLine;
+                while ((selectionLine = selectionFile.ReadLine()) != null)
+                {
+                    string[] selectionLineSplit = selectionLine.Split('\t');
+                    List<string> selectedVariants;
+                    if (!selectedVariantsForBlockState.TryGetValue(selectionLineSplit[0], out selectedVariants))
+                    {
+                        selectedVariantsForBlockState[selectionLineSplit[0]] = new List<string>();
+                        selectedVariants = selectedVariantsForBlockState[selectionLineSplit[0]];
+                    }
+                    selectedVariants.Add(selectionLineSplit[1]);
+                }
+            }
+
+            UnselectAll();
+            foreach (var kv in selectedVariantsForBlockState)
+            {
+                MCBlockState selectedBlockState;
+                if (blockStates.TryGetValue(kv.Key, out selectedBlockState))
+                {
+                    selectedBlockState.LoadBlockSelection(kv.Value);
+                }
+            }
         }
     }
 }
