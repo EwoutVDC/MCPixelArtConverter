@@ -56,7 +56,7 @@
             this.textureImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             this.textureImage.Location = new System.Drawing.Point(458, 44);
             this.textureImage.Name = "textureImage";
-            this.textureImage.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
+            this.textureImage.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
             this.textureImage.Size = new System.Drawing.Size(320, 320);
             this.textureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.textureImage.TabIndex = 3;
