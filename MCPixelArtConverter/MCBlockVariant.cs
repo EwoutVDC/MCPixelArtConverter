@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+//using System.Windows.Media.Media3D; TODO: this seems like a great library for 3d calculations. how to use??
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +14,15 @@ namespace MCPixelArtConverter
         public MCBlockState BlockState { get; }
         public string Name { get; }
         public bool Selected { get; set; }
-        //Only the first model of a variant is used
-        List<MCBlockModel> models = new List<MCBlockModel>(); //see bedrock blockstate file
-        //TODO: y, uvlock
-        
-        JToken json;
-        Dictionary<string, JToken> jsonProperties; //uvlock, y  etc... not good. These should be properties
+
+        JToken json; //raw json used to construct the variant. only here for debugging purpose
+
+        //If multiple models, equal chance of use in minecraft (ie bedrock)
+        //We only use the first model at the moment
+        //TODO: use all possible models. This would mean replacing blocks until you get the right model for a very minor gain usually?
+        MCBlockModel model;
+        int x = 0, y = 0, z = 0;
+        bool uvlock = false;
 
         /*
         Simple example:
@@ -32,6 +36,15 @@ namespace MCPixelArtConverter
                 { "model": "bedrock", "y": 180 },
                 { "model": "bedrock_mirrored", "y": 180 }
             ]
+        }
+
+        {
+            "variants": {
+                "axis=y":  { "model": "acacia_log" },
+                "axis=z":   { "model": "acacia_log", "x": 90 },
+                "axis=x":   { "model": "acacia_log", "x": 90, "y": 90 },
+                "axis=none": { "model": "acacia_bark" }
+            }
         }
 
         "variants": {
@@ -48,41 +61,68 @@ namespace MCPixelArtConverter
             json = value;
             Selected = true; //TODO: save selected variants to config file and load here or restore in resourcepack
 
-            switch (value.Type)
-            {
-                case JTokenType.Object:
-                    models.Add(CreateModelFromJson(blockModels, value));
-                    break;
-                case JTokenType.Array:
-                    foreach (JObject modelObject in (JArray) value)
-                    {
-                        models.Add(CreateModelFromJson(blockModels, modelObject));
-                    }
-                    break;
-                default:
-                    throw new ArgumentException("Invalid Jtoken type " + value.Type);
-            }
-        }
+            if (value.Type == JTokenType.Array)
+                value = ((JArray)value)[0];
 
-        private MCBlockModel CreateModelFromJson(MCBlockModelCollection blockModels, JToken value)
-        {
             IDictionary<string, JToken> variantsDict = (JObject)value;
-            jsonProperties = variantsDict.ToDictionary(pair => pair.Key, pair => pair.Value);
-            string fileName = jsonProperties["model"].ToString();
-            return blockModels.FromFile(fileName);
+            Dictionary<string, JToken> jsonProperties = variantsDict.ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            model = blockModels.FromFile(jsonProperties["model"].ToString());
+            if (jsonProperties.ContainsKey("x"))
+                x = (int)jsonProperties["x"];
+            if (jsonProperties.ContainsKey("y"))
+                y = (int)jsonProperties["y"];
+            if (jsonProperties.ContainsKey("z"))
+                z = (int)jsonProperties["z"];
+
+            if (jsonProperties.ContainsKey("uvlock"))
+                uvlock = (bool)jsonProperties["uvlock"];
         }
 
         public override string ToString()
         {
             return BlockState.FileName + "_" + Name;
+        }        
+
+        private static Sides RotateSide(Sides side, int x, int y, int z, out RotateFlipType rotation)
+        {
+            MCPoint sidePoint = MCPoint.FromSide(side);
+            sidePoint.Rotate(new RotationMatrix(x, y, z));
+            //todo: double check only 1 coord is 1?
+            int rotate;
+            if (sidePoint.X != 0)
+                rotate = x;
+            else if (sidePoint.Y != 0)
+                rotate = y;
+            else
+                rotate = z;
+            switch (rotate)
+            {
+                case 90:
+                    rotation = RotateFlipType.Rotate90FlipNone;
+                    break;
+                case 180:
+                    rotation = RotateFlipType.Rotate180FlipNone;
+                    break;
+                case 270:
+                    rotation = RotateFlipType.Rotate270FlipNone;
+                    break;
+                case 0:
+                default:
+                    rotation = RotateFlipType.RotateNoneFlipNone;
+                    break;
+            }
+
+            return sidePoint.ToSide();
         }
 
         public Bitmap GetSideImage(Sides side)
         {
-            //TODO: Block variant rotation does not seem to be taken into account
-            return models[0].GetSideImage(side);
+            RotateFlipType rotation;
+            side = RotateSide(side, x, y, z, out rotation);
+            Bitmap image = model.GetSideImage(side);
+            image.RotateFlip(rotation);
+            return image;
         }
-
-        
     }
 }

@@ -43,13 +43,13 @@ namespace MCPixelArtConverter
             {
                 case Sides.Up:
                 case Sides.Down:
-                    return sortingPoint.y * coef;
+                    return sortingPoint.Y * coef;
                 case Sides.East:
                 case Sides.West:
-                    return sortingPoint.x * coef;
+                    return sortingPoint.X * coef;
                 case Sides.North:
                 case Sides.South:
-                    return sortingPoint.z * coef;
+                    return sortingPoint.Z * coef;
                 default:
                     return 0;
             }
@@ -77,24 +77,24 @@ namespace MCPixelArtConverter
             {
                 case Sides.Up:
                 case Sides.Down:
-                    uMin = from.x;
-                    uMax = to.x;
-                    vMin = from.z;
-                    vMax = to.z;
+                    uMin = from.X;
+                    uMax = to.X;
+                    vMin = from.Z;
+                    vMax = to.Z;
                     break;
                 case Sides.East:
                 case Sides.West:
-                    uMin = from.z;
-                    uMax = to.z;
-                    vMin = 16 - to.y;
-                    vMax = 16 - from.y;
+                    uMin = from.Z;
+                    uMax = to.Z;
+                    vMin = 16 - to.Y;
+                    vMax = 16 - from.Y;
                     break;
                 case Sides.North:
                 case Sides.South:
-                    uMin = from.x;
-                    uMax = to.x;
-                    vMin = 16 - to.y;
-                    vMax = 16 - from.y;
+                    uMin = from.X;
+                    uMax = to.X;
+                    vMin = 16 - to.Y;
+                    vMax = 16 - from.Y;
                     break;
             }
 

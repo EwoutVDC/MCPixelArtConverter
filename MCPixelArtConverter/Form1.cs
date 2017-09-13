@@ -15,8 +15,8 @@ namespace MCPixelArtConverter
     {
         //TODO: save/load baseFolderName to/from config json file?
         //TODO: use minecraft jar + resource pack folders instead of unzipped folders
-        //string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
+        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
@@ -79,7 +79,6 @@ namespace MCPixelArtConverter
             lblScaleValue.Text = scale.ToString("0.##") + "%";
             scaleTrackBar.Value = (int)scale;
 
-            //TODO: fix rounding here - values change after repeatedly changing focus >.<
             scaledSize = new Size((Int32) (image.Width * scale / 100), (Int32) (image.Height * scale / 100));
 
             if (image != null)

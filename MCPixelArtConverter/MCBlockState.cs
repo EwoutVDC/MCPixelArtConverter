@@ -14,7 +14,7 @@ namespace MCPixelArtConverter
         public string BaseFolder { get; }
         public string FileName { get; }
         Dictionary<string, MCBlockVariant> VariantsByName = new Dictionary<string, MCBlockVariant>();
-        //multipart blockstates todo
+        //TODO: multipart blockstates. ie fences. these are fairly complex with apply conditions for certain parts
 
         public MCBlockState(string baseFolder, string fileName, MCBlockModelCollection blockModels)
         {

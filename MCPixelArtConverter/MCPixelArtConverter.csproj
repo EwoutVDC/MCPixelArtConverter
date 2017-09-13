@@ -71,6 +71,7 @@
     <Compile Include="MCPaletteForm.Designer.cs">
       <DependentUpon>MCPaletteForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RotationMatrix.cs" />
     <Compile Include="Sides.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
