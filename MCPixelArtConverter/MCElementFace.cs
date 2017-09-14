@@ -60,6 +60,7 @@ namespace MCPixelArtConverter
             if (textures.ContainsKey(name))
             {
                 RotateFlipType flipType = RotateFlipType.RotateNoneFlipNone;
+                RotateFlipType rotation = RotateFlipType.RotateNoneFlipNone;
                 RectangleF rect = new RectangleF(Math.Min(UMin, UMax), Math.Min(VMin, VMax), Math.Abs(UMax - UMin), Math.Abs(VMax - VMin));
                 if (UMax < UMin)
                 {
@@ -73,8 +74,11 @@ namespace MCPixelArtConverter
                     flipType = RotateFlipType.RotateNoneFlipY;
                 }
 
+                rotation = RotationMatrix.RotateFlipTypeFromDegrees(Rotation);
+
                 Bitmap bm = textures[name].Clone(rect, textures[name].PixelFormat);
                 bm.RotateFlip(flipType);
+                bm.RotateFlip(rotation);
                 return bm;
             }
             else if (textureReferences.ContainsKey(name))

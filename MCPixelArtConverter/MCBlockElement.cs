@@ -12,7 +12,22 @@ namespace MCPixelArtConverter
     {
         MCPoint from, to;
         Dictionary<Sides, MCElementFace> faces = new Dictionary<Sides, MCElementFace>();
-        //rotation needed?
+
+        /*
+        "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "down" },
+                "up":    { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "up" },
+                "north": { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "north", "rotation": 90 },
+                "south": { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "south", "rotation": 270 },
+                "west":  { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "west", "rotation": 0 },
+                "east":  { "uv": [ 0,  0, 16, 16 ], "texture": "#pattern", "cullface": "east", "rotation": 180 }
+            }
+        }
+        ]
+        */
 
         public MCBlockElement(JObject json)
         {

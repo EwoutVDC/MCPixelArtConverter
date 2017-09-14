@@ -87,8 +87,11 @@ namespace MCPixelArtConverter
         private static Sides RotateSide(Sides side, int x, int y, int z, out RotateFlipType rotation)
         {
             MCPoint sidePoint = MCPoint.FromSide(side);
+            //rotate the block
             sidePoint.Rotate(new RotationMatrix(x, y, z));
             //todo: double check only 1 coord is 1?
+
+            //rotate along the viewing axis
             int rotate;
             if (sidePoint.X != 0)
                 rotate = x;
@@ -96,25 +99,11 @@ namespace MCPixelArtConverter
                 rotate = y;
             else
                 rotate = z;
-            switch (rotate)
-            {
-                case 90:
-                    rotation = RotateFlipType.Rotate90FlipNone;
-                    break;
-                case 180:
-                    rotation = RotateFlipType.Rotate180FlipNone;
-                    break;
-                case 270:
-                    rotation = RotateFlipType.Rotate270FlipNone;
-                    break;
-                case 0:
-                default:
-                    rotation = RotateFlipType.RotateNoneFlipNone;
-                    break;
-            }
+            rotation = RotationMatrix.RotateFlipTypeFromDegrees(rotate);
 
             return sidePoint.ToSide();
         }
+
 
         public Bitmap GetSideImage(Sides side)
         {

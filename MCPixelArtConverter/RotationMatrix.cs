@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,6 +80,30 @@ namespace MCPixelArtConverter
                 }
             }
             return result;
+        }
+
+        //TODO: better place to put this common code? create separate class for this?
+        public static RotateFlipType RotateFlipTypeFromDegrees(int rotate)
+        {
+            RotateFlipType rotation;
+            switch (rotate)
+            {
+                case 90:
+                    rotation = RotateFlipType.Rotate90FlipNone;
+                    break;
+                case 180:
+                    rotation = RotateFlipType.Rotate180FlipNone;
+                    break;
+                case 270:
+                    rotation = RotateFlipType.Rotate270FlipNone;
+                    break;
+                case 0:
+                default:
+                    rotation = RotateFlipType.RotateNoneFlipNone;
+                    break;
+            }
+
+            return rotation;
         }
     }
 }
