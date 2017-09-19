@@ -79,12 +79,12 @@ namespace MCPixelArtConverter
             Bitmap sideFace = faces[side].GetBitmap(textures, textureReferences);
             if (sideFace == null)
                 return;
-            
+
             Graphics g = Graphics.FromImage(image);
-            g.DrawImage(sideFace, GetImageArea(side));
+            g.DrawImageUnscaledAndClipped(sideFace, GetImageArea(side));
         }
 
-        RectangleF GetImageArea(Sides side)
+        Rectangle GetImageArea(Sides side)
         {
             float uMin = 0, vMin = 0, uMax = 0, vMax = 0;
 
@@ -113,7 +113,12 @@ namespace MCPixelArtConverter
                     break;
             }
 
-            return new RectangleF(uMin, vMin, (uMax - uMin), (vMax - vMin));
+            return new Rectangle((int)uMin, (int)vMin, (int)(uMax - uMin), (int)(vMax - vMin));
+        }
+
+        public override string ToString()
+        {
+            return from + ">" + to;
         }
     }
 }
