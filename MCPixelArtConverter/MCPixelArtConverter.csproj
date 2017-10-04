@@ -63,6 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorDouble.cs" />
+    <Compile Include="ImageDitherer.cs" />
+    <Compile Include="ImageDithererSierra.cs" />
     <Compile Include="MCBlockModelCollection.cs" />
     <Compile Include="MCElementFace.cs" />
     <Compile Include="MCPaletteForm.cs">

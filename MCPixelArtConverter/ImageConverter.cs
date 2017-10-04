@@ -9,6 +9,6 @@ namespace MCPixelArtConverter
 {
     interface ImageConverter
     {
-        MCBlockVariant[,] Convert(Bitmap image, Size size);
+        MCBlockVariant[,] Convert(Bitmap image, Size size, ImageDitherer ditherer);
     }
 }

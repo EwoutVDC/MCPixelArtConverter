@@ -25,6 +25,40 @@ namespace MCPixelArtConverter
         public MCPACMainForm()
         {
             InitializeComponent();
+            List<ImageDitherer> ditherers = new List<ImageDitherer>();
+            
+            ditherers.Add(new ImageDithererErrorDiffuser("Sierra", new double[,]
+                                                        { { 0,      0,      0,      5/32.0, 3/32.0 },
+                                                          { 2/32.0, 4/32.0, 5/32.0, 4/32.0, 2/32.0 },
+                                                          { 0,      2/32.0, 3/32.0, 2/32.0, 0      } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Sierra Two row", new double[,]
+                                                        { { 0,      0,      0,      4/16.0, 3/16.0 },
+                                                          { 1/16.0, 2/16.0, 3/16.0, 2/16.0, 1/16.0 } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Sierra Lite", new double[,]
+                                                        { { 0,      0,      1/4.0},
+                                                          { 1/4.0,  2/4.0,  1/4.0} }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Floyd-Steinberg", new double[,]
+                                                        { { 0,      0,      7/16.0 },
+                                                          { 3/16.0, 5/16.0, 1/16.0 } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Jarvis, Judice and Ninke", new double[,]
+                                                        { { 0,      0,      0,      7/48.0, 5/48.0 },
+                                                          { 3/48.0, 5/48.0, 7/48.0, 5/48.0, 3/48.0 },
+                                                          { 1/48.0, 3/48.0, 5/48.0, 3/48.0, 1/48.0 } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Stucki", new double[,]
+                                                        { { 0,      0,      0,      8/42.0, 4/42.0 },
+                                                          { 2/42.0, 4/42.0, 8/42.0, 4/42.0, 2/42.0 },
+                                                          { 1/42.0, 2/42.0, 4/42.0, 2/42.0, 1/42.0 } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Atkinson", new double[,]
+                                                        { { 0,      0,      0,      1/8.0,  1/8.0 },
+                                                          { 0,      1/8.0,  1/8.0,  1/8.0,  0     },
+                                                          { 0,      0,      1/8.0,  0,      0     } }));
+            ditherers.Add(new ImageDithererErrorDiffuser("Burkes", new double[,]
+                                                        { { 0,      0,      0,      8/32.0, 4/32.0 },
+                                                          { 2/32.0, 4/32.0, 8/32.0, 4/32.0, 2/32.0 } }));
+            ditherers.Sort();
+            cmbDitherers.DisplayMember = "Name";
+            cmbDitherers.DataSource = ditherers;
+            cmbDitherers.SelectedIndex = ditherers.FindIndex(d => d.Name == "Sierra");
         }
 
         public void SetSelectedSide(Sides side)
@@ -52,6 +86,7 @@ namespace MCPixelArtConverter
             }
 
             Console.WriteLine("Done loading block info");
+            //resourcePack.LoadBlockSelection("C:\\Users\\evandeca\\Pictures\\carpet_blocks.txt");
         }
 
         private void btnLoadPicture_Click(object sender, EventArgs e)
@@ -122,7 +157,15 @@ namespace MCPixelArtConverter
             Dictionary<MCBlockVariant, Bitmap> palette = resourcePack.GetPalette();
             ImageConverter imageConverter = new ImageConverterAverage(palette);
 
-            MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize);
+            ImageDitherer d = null;
+
+            if (cbDithering.Checked)
+            {
+                d = (ImageDitherer)cmbDitherers.SelectedValue;
+                d.Reset(scaledSize);
+            }
+
+            MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize, d);
 
             Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
             Graphics g = Graphics.FromImage(pixelArtImage);
@@ -157,6 +200,11 @@ namespace MCPixelArtConverter
             MCPaletteForm paletteForm = new MCPaletteForm(resourcePack);
 
             paletteForm.Show();
+        }
+
+        private void cbDithering_CheckedChanged(object sender, EventArgs e)
+        {
+            cmbDitherers.Enabled = cbDithering.Checked;
         }
     }
 }

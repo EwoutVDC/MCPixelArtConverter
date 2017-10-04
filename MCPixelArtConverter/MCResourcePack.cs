@@ -86,6 +86,7 @@ namespace MCPixelArtConverter
 
         public void SaveBlockSelection(string name)
         {
+            //todo: this doesn't save variant selection?
             StreamWriter selectionFile;
             using (selectionFile = new StreamWriter(name))
             {

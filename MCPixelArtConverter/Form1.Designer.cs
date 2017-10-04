@@ -40,6 +40,8 @@
             this.scaleTrackBar = new System.Windows.Forms.TrackBar();
             this.lblScaleValue = new System.Windows.Forms.Label();
             this.btnSelectBlocks = new System.Windows.Forms.Button();
+            this.cmbDitherers = new System.Windows.Forms.ComboBox();
+            this.cbDithering = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -164,11 +166,33 @@
             this.btnSelectBlocks.UseVisualStyleBackColor = true;
             this.btnSelectBlocks.Click += new System.EventHandler(this.btnSelectBlocks_Click);
             // 
+            // cmbDitherers
+            // 
+            this.cmbDitherers.Enabled = false;
+            this.cmbDitherers.FormattingEnabled = true;
+            this.cmbDitherers.Location = new System.Drawing.Point(224, 40);
+            this.cmbDitherers.Name = "cmbDitherers";
+            this.cmbDitherers.Size = new System.Drawing.Size(121, 21);
+            this.cmbDitherers.TabIndex = 21;
+            // 
+            // cbDithering
+            // 
+            this.cbDithering.AutoSize = true;
+            this.cbDithering.Location = new System.Drawing.Point(112, 42);
+            this.cbDithering.Name = "cbDithering";
+            this.cbDithering.Size = new System.Drawing.Size(102, 17);
+            this.cbDithering.TabIndex = 22;
+            this.cbDithering.Text = "Enable dithering";
+            this.cbDithering.UseVisualStyleBackColor = true;
+            this.cbDithering.CheckedChanged += new System.EventHandler(this.cbDithering_CheckedChanged);
+            // 
             // MCPACMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(589, 510);
+            this.Controls.Add(this.cbDithering);
+            this.Controls.Add(this.cmbDitherers);
             this.Controls.Add(this.btnSelectBlocks);
             this.Controls.Add(this.lblScaleValue);
             this.Controls.Add(this.scaleTrackBar);
@@ -204,6 +228,8 @@
         private System.Windows.Forms.TrackBar scaleTrackBar;
         private System.Windows.Forms.Label lblScaleValue;
         private System.Windows.Forms.Button btnSelectBlocks;
+        private System.Windows.Forms.ComboBox cmbDitherers;
+        private System.Windows.Forms.CheckBox cbDithering;
     }
 }
 

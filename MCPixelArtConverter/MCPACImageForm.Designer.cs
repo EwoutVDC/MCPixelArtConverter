@@ -41,7 +41,7 @@
             this.pictureBox1.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             this.pictureBox1.Location = new System.Drawing.Point(12, 48);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            this.pictureBox1.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
             this.pictureBox1.Size = new System.Drawing.Size(726, 513);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;

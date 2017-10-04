@@ -59,7 +59,7 @@ namespace MCPixelArtConverter
             BlockState = blockState;
             Name = variantName;
             json = value;
-            Selected = true; //TODO: save selected variants to config file and load here or restore in resourcepack
+            Selected = true;
 
             if (value.Type == JTokenType.Array)
                 value = ((JArray)value)[0];

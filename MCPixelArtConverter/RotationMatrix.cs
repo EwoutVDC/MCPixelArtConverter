@@ -25,7 +25,6 @@ namespace MCPixelArtConverter
             V = v;
         }
 
-        //todo: try to eliminate code duplication here
         private static RotationMatrix RotateX(int x)
         {
             double xRad = RadianFromDegree(x);

@@ -24,6 +24,7 @@ namespace MCPixelArtConverter
         Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
         Dictionary<string, string> textureReferences = new Dictionary<string, string>();
         //common textures keys: all, top, bottom, north, south, east, west, side
+        //todo: support side, end (for quartz blocks)
         //other examples: wool (carpet_color.json)
                 
         //TODO: Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
@@ -77,7 +78,6 @@ namespace MCPixelArtConverter
 
             Bitmap bm = new Bitmap(16,16);
 
-            //TODO: this is not entirely correct yet, see cauldron sides etc
             UpdateSideImage(side, bm, textures, textureReferences);
 
             return bm;
