@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,18 +13,16 @@ namespace MCPixelArtConverter
     //Average uses the average color of each block texture as one pixel
     class ImageConverterAverage : ImageConverter
     {
-        Dictionary<MCBlockVariant, ColorDouble> averageColors = new Dictionary<MCBlockVariant, ColorDouble>();
+        ConcurrentDictionary<MCBlockVariant, ColorDouble> averageColors = new ConcurrentDictionary<MCBlockVariant, ColorDouble>();
 
         public ImageConverterAverage(Dictionary<MCBlockVariant, Bitmap> palette)
         {
-            //TODO: do this in parallel? it breaks the loading somehow
-            foreach (KeyValuePair<MCBlockVariant, Bitmap> kv in palette)
-                //Parallel.ForEach(palette, kv =>
+            Parallel.ForEach(palette, kv =>
             {
                 ColorDouble averageColor = new ColorDouble(0, 0, 0, 0);
                 Bitmap bm = kv.Value;
                 if (bm == null)
-                    continue;
+                    return;
 
                 for (int w = 0; w < bm.Width; w++)
                 {
@@ -39,9 +38,10 @@ namespace MCPixelArtConverter
                 averageColor /= bm.Width * bm.Height;
 
 
-                averageColors.Add(kv.Key, averageColor);
+                if (!averageColors.TryAdd(kv.Key, averageColor))
+                    Console.Error.WriteLine("Could not add average color for" + kv.Key);
             }
-            //);
+            );
         }
 
         public MCBlockVariant[,] Convert(Bitmap image, Size size, ImageDitherer ditherer)
