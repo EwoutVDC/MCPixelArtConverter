@@ -81,7 +81,7 @@ namespace MCPixelArtConverter
             return result;
         }
 
-        //TODO: better place to put this common code? create separate class for this?
+        //TODO: P4 better place to put this common code? create separate class for this?
         public static RotateFlipType RotateFlipTypeFromDegrees(int rotate)
         {
             RotateFlipType rotation;

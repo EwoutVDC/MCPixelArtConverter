@@ -13,8 +13,8 @@ namespace MCPixelArtConverter
 {
     partial class MCPACMainForm : Form
     {
-        //TODO: save/load baseFolderName to/from config json file?
-        //TODO: use minecraft jar + resource pack folders instead of unzipped folders
+        //TODO: P1 save/load baseFolderName to/from config json file?
+        //TODO: P1 use minecraft jar + resource pack folders instead of unzipped folders
         string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
         //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
         MCResourcePack resourcePack = null;
@@ -152,7 +152,7 @@ namespace MCPixelArtConverter
             if (!CheckResourcePack())
                 return;
 
-            //TODO: construct converter and keep (in Dictionary<Sides, ImageConverter>, lazy loaded) when changing selected side.
+            //TODO: P2 construct converter and keep (in Dictionary<Sides, ImageConverter>, lazy loaded) when changing selected side.
             //Discard when reloading block info
             Dictionary<MCBlockVariant, Bitmap> palette = resourcePack.GetPalette();
             ImageConverter imageConverter = new ImageConverterAverage(palette);

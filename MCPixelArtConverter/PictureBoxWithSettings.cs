@@ -16,7 +16,7 @@ namespace MCPixelArtConverter
         public InterpolationMode InterpolationMode { get; set; }
         public PixelOffsetMode PixelOffsetMode { get; set; }
 
-        //TODO: add zoom with scrollwheel
+        //TODO: P3 add zoom with scrollwheel
 
         protected override void OnPaint(PaintEventArgs paintEventArgs)
         {

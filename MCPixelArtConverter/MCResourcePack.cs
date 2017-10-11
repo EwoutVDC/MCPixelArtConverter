@@ -100,7 +100,7 @@ namespace MCPixelArtConverter
         {
             StreamReader selectionFile;
             Dictionary<string, List<string>> selectedVariantsForBlockState = new Dictionary<string, List<string>>();
-            //TODO: handle FileNotFoundException?
+            //TODO: P2 handle FileNotFoundException?
             using (selectionFile = new StreamReader(name))
             {
                 string selectionLine;

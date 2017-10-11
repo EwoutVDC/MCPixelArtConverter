@@ -25,7 +25,7 @@ namespace MCPixelArtConverter
             diffusionHeight = diffusionMatrix.GetLength(0);
             diffusionWidth = diffusionMatrix.GetLength(1);
             Name = name;
-            //TODO: handle exceptions function calls were Reset(s) has not been called yet
+            //TODO: P2 handle exceptions function calls were Reset(s) has not been called yet
         }
 
         public void Reset(Size s)

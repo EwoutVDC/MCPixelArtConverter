@@ -147,7 +147,7 @@ namespace MCPixelArtConverter
             saveFileDialog.Filter = "Plain text files|*.txt";
             saveFileDialog.ShowDialog();
 
-            //TODO: check dialog result first
+            //TODO: P2 check dialog result first
             resourcePack.SaveBlockSelection(saveFileDialog.FileName);
         }
 

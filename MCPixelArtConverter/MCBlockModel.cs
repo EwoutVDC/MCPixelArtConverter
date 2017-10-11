@@ -26,7 +26,7 @@ namespace MCPixelArtConverter
         //common textures keys: all, top, bottom, north, south, east, west, side, end
         //other examples: wool (carpet_color.json)
                 
-        //TODO: Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
+        //TODO: P4 Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
         //By extending the class and making the constructor protected????
         public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
         {
@@ -108,7 +108,7 @@ namespace MCPixelArtConverter
                 
                 //Orderering is important here!!! this is not good. ie check cauldron block model
                 //stairs/slabs model are good examples of not completely opaque blocks
-                //TODO: option to filter out blocks with transparent parts?
+                //TODO: P4 option to filter out blocks with transparent parts?
                 foreach (MCBlockElement element in elements)
                 {
                     element.UpdateSideImage(side, bm, textures, textureReferences);

@@ -19,7 +19,7 @@ namespace MCPixelArtConverter
 
         //If multiple models, equal chance of use in minecraft (ie bedrock)
         //We only use the first model at the moment
-        //TODO: use all possible models. This would mean replacing blocks until you get the right model for a very minor gain usually?
+        //TODO: P4 use all possible models. This would mean replacing blocks until you get the right model for a very minor gain usually?
         MCBlockModel model;
         int x = 0, y = 0, z = 0;
         bool uvlock = false;
@@ -89,7 +89,6 @@ namespace MCPixelArtConverter
             MCPoint sidePoint = MCPoint.FromSide(side);
             //rotate the block
             sidePoint.Rotate(new RotationMatrix(x, y, z));
-            //todo: double check only 1 coord is 1?
 
             //rotate along the viewing axis
             int rotate;

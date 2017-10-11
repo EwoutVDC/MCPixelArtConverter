@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MCPixelArtConverter
 {
-    //TODO: add converter that matches each pixel of the block texture to the original image
+    //TODO: P4 add converter that matches each pixel of the block texture to the original image
     //Average uses the average color of each block texture as one pixel
     class ImageConverterAverage : ImageConverter
     {
@@ -45,7 +45,7 @@ namespace MCPixelArtConverter
 
         public MCBlockVariant[,] Convert(Bitmap image, Size size, ImageDitherer ditherer)
         {            
-            //todo: investigate how this scales up/down
+            //todo: P4 investigate how this scales up/down
             Bitmap scaledImage = new Bitmap(image, size);
 
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
