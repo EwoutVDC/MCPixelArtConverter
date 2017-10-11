@@ -36,8 +36,7 @@ namespace MCPixelArtConverter
                 }
 
                 averageColor /= bm.Width * bm.Height;
-
-
+                
                 if (!averageColors.TryAdd(kv.Key, averageColor))
                     Console.Error.WriteLine("Could not add average color for" + kv.Key);
             }

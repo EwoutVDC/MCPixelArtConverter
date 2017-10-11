@@ -86,7 +86,6 @@ namespace MCPixelArtConverter
 
         public void SaveBlockSelection(string name)
         {
-            //todo: this doesn't save variant selection?
             StreamWriter selectionFile;
             using (selectionFile = new StreamWriter(name))
             {
@@ -114,6 +113,7 @@ namespace MCPixelArtConverter
                         selectedVariantsForBlockState[selectionLineSplit[0]] = new List<string>();
                         selectedVariants = selectedVariantsForBlockState[selectionLineSplit[0]];
                     }
+                    //This does not take into account duplicates, but that is not needed since this can only enable a variant
                     selectedVariants.Add(selectionLineSplit[1]);
                 }
             }
