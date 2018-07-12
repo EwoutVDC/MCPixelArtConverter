@@ -46,6 +46,7 @@
             this.checkedListBoxBlockStates.Location = new System.Drawing.Point(12, 42);
             this.checkedListBoxBlockStates.Name = "checkedListBoxBlockStates";
             this.checkedListBoxBlockStates.Size = new System.Drawing.Size(217, 499);
+            this.checkedListBoxBlockStates.Sorted = true;
             this.checkedListBoxBlockStates.TabIndex = 2;
             this.checkedListBoxBlockStates.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxBlockStates_ItemCheck);
             this.checkedListBoxBlockStates.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxBlockStates_SelectedIndexChanged);
@@ -70,6 +71,7 @@
             this.checkedListBoxVariants.Location = new System.Drawing.Point(235, 42);
             this.checkedListBoxVariants.Name = "checkedListBoxVariants";
             this.checkedListBoxVariants.Size = new System.Drawing.Size(217, 499);
+            this.checkedListBoxVariants.Sorted = true;
             this.checkedListBoxVariants.TabIndex = 4;
             this.checkedListBoxVariants.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxVariants_ItemCheck);
             this.checkedListBoxVariants.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxVariants_SelectedIndexChanged);
