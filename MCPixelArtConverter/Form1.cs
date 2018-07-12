@@ -13,9 +13,8 @@ namespace MCPixelArtConverter
 {
     partial class MCPACMainForm : Form
     {
-        //TODO: P1 save/load baseFolderName to/from config json file? - use %appdata%/roaming/.minecraft/
-        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12";
-        //string baseFolderName = "C:\\Users\\Ewout\\AppData\\Roaming\\.minecraft\\versions\\1.12";
+        string defaultFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft\\versions");
+
         MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
@@ -67,19 +66,22 @@ namespace MCPixelArtConverter
 
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
         {
-            //TODO: P1 Pick jar file instead of folder
-            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-            if (!string.IsNullOrEmpty(baseFolderName))
-                folderBrowser.SelectedPath = baseFolderName;
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Title = "Select minecraft .jar file";
+            if (Directory.Exists(defaultFolderPath))
+                fileDialog.InitialDirectory = defaultFolderPath;
+            else
+                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            if (folderBrowser.ShowDialog() == DialogResult.Cancel)
+            if (fileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-
-            baseFolderName = folderBrowser.SelectedPath + "\\";
+            
+            if (!fileDialog.CheckFileExists)
+                return;
 
             try
             {
-                resourcePack = new MCResourcePack(baseFolderName);
+                resourcePack = new MCResourcePack(fileDialog.FileName);
             } catch (ArgumentException ex)
             {
                 MessageBox.Show(ex.Message);

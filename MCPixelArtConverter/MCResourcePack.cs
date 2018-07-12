@@ -12,7 +12,7 @@ namespace MCPixelArtConverter
     class MCResourcePack
     {
         public const string AssetFolderPath = "assets/minecraft/";
-        string baseFolderPath;
+
         Dictionary<string, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
         MCBlockModelCollection blockModels;
 
@@ -21,16 +21,14 @@ namespace MCPixelArtConverter
         //Cache for palettes for different sides
         Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>> cachedPalettes = new Dictionary<Sides, Dictionary<MCBlockVariant, Bitmap>>();
 
-        public MCResourcePack(string baseFolder)
+        public MCResourcePack(string filePath)
         {
             SelectedSide = Sides.Up; //default side
-            baseFolderPath = baseFolder;
 
             //TODO: P2 save to config file and load instead of static default
-            using (ZipArchive jar = ZipFile.Open(baseFolderPath + "\\1.12.jar", ZipArchiveMode.Read))
+            using (ZipArchive jar = ZipFile.Open(filePath, ZipArchiveMode.Read))
             {
                 Console.WriteLine("Opened jar file " + jar);
-                //TODO: P1 use minecraft jar + resource pack folders instead of unzipped folders
                 if (blockModels == null)
                     blockModels = new MCBlockModelCollection();
                 blockModels.jar = jar;
@@ -39,7 +37,6 @@ namespace MCPixelArtConverter
                 {
                     foreach (ZipArchiveEntry entry in jar.Entries)
                     {
-                        Console.WriteLine("Jar entry " + entry.FullName);
                         //TODO: P2: more efficient way to get files from subfolder in ziparchive??
                         if (!entry.FullName.StartsWith(AssetFolderPath + "blockstates"))
                             continue;
