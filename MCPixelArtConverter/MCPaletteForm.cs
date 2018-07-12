@@ -144,18 +144,22 @@ namespace MCPixelArtConverter
         private void btnSaveSelection_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             saveFileDialog.Filter = "Plain text files|*.txt";
-            saveFileDialog.ShowDialog();
 
-            //TODO: P2 check dialog result first
-            resourcePack.SaveBlockSelection(saveFileDialog.FileName);
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                resourcePack.SaveBlockSelection(saveFileDialog.FileName);
         }
 
         private void btnLoadSelection_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             fileDialog.Filter = "Plain text files|*.txt";
-            fileDialog.ShowDialog();
+
+            if (fileDialog.ShowDialog() != DialogResult.OK)
+                return;
 
             if (!File.Exists(fileDialog.FileName))
             {

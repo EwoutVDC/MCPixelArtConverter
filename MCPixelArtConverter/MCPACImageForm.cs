@@ -27,9 +27,10 @@ namespace MCPixelArtConverter
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "PNG files|*.png";
-            saveFileDialog.ShowDialog();
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
-            pictureBox1.Image.Save(saveFileDialog.FileName);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                pictureBox1.Image.Save(saveFileDialog.FileName);
         }
     }
 }
