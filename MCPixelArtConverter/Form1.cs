@@ -94,6 +94,7 @@ namespace MCPixelArtConverter
         private void btnLoadPicture_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileBrowser = new OpenFileDialog();
+            fileBrowser.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             if (fileBrowser.ShowDialog() == DialogResult.Cancel)
                 return;
 
