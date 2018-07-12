@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace MCPixelArtConverter
 {
     class MCResourcePack
     {
+        public const string AssetFolderPath = "assets/minecraft/";
         string baseFolderPath;
         Dictionary<string, MCBlockState> blockStates = new Dictionary<string, MCBlockState>();
         MCBlockModelCollection blockModels;
@@ -21,21 +23,37 @@ namespace MCPixelArtConverter
 
         public MCResourcePack(string baseFolder)
         {
-            SelectedSide = Sides.Up; //default side TODO: save to config file and load instead of static default
-
+            SelectedSide = Sides.Up; //default side
             baseFolderPath = baseFolder;
-            if (!Directory.Exists(baseFolderPath + "blockstates\\"))
-            {
-                throw new ArgumentException("Invalid baseFolder " + baseFolder);
-            }
 
-            blockModels = new MCBlockModelCollection(baseFolder);
-
-            foreach (string filename in Directory.GetFiles(baseFolderPath + "blockstates\\", "*.json"))
+            //TODO: P2 save to config file and load instead of static default
+            using (ZipArchive jar = ZipFile.Open(baseFolderPath + "\\1.12.jar", ZipArchiveMode.Read))
             {
-                MCBlockState blockstate = new MCBlockState(baseFolder, filename, blockModels);
-                blockStates.Add(blockstate.FileName, blockstate);
-            }
+                Console.WriteLine("Opened jar file " + jar);
+                //TODO: P1 use minecraft jar + resource pack folders instead of unzipped folders
+                if (blockModels == null)
+                    blockModels = new MCBlockModelCollection();
+                blockModels.jar = jar;
+
+                try
+                {
+                    foreach (ZipArchiveEntry entry in jar.Entries)
+                    {
+                        Console.WriteLine("Jar entry " + entry.FullName);
+                        //TODO: P2: more efficient way to get files from subfolder in ziparchive??
+                        if (!entry.FullName.StartsWith(AssetFolderPath + "blockstates"))
+                            continue;
+
+                        MCBlockState blockstate = new MCBlockState(entry, blockModels);
+                        blockStates.Add(blockstate.FileName, blockstate);
+                    }
+                }
+                finally
+                {
+                    //keep cached blockmodels (with textures), but remove the reference to the jar file we are about to close
+                    blockModels.jar = null;
+                }
+            }            
         }
 
         public MCBlockState getBlockState(string blockStateName)

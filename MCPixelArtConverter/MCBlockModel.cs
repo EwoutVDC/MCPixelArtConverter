@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.IO.Compression;
 
 namespace MCPixelArtConverter
 {
     class MCBlockModel
     {
-        const string ModelFolderPath = "models\\block\\";
-        const string TextureFolderPath = "textures\\";
+        const string ModelFolderPath = "models/block/";
+        const string TextureFolderPath = "textures/";
 
         //If a parent is set, that contains all elements. They can't be altered by children!
         MCBlockModel parent = null;
@@ -28,44 +29,61 @@ namespace MCPixelArtConverter
                 
         //TODO: P4 Is there a way to protect the constructor from being used from anywhere else than MCBlockModelCollection?
         //By extending the class and making the constructor protected????
-        public MCBlockModel(string baseFolderName, string modelFileName, MCBlockModelCollection blockModels)
+        public MCBlockModel(ZipArchive jar, string modelFileName, MCBlockModelCollection blockModels)
         {
-            JObject json = JObject.Parse(File.ReadAllText(baseFolderName + ModelFolderPath + modelFileName + ".json"));
             Name = modelFileName;
-            
-            //Load or reference parent model
-            JToken parentToken = json.GetValue("parent");
-            if (parentToken != null)
-            {
-                string parentFileName = parentToken.Value<string>().Replace("block/", "");
-                parent = blockModels.FromFile(parentFileName);
-            }
 
-            //Load texture bitmaps - TODO lazy loading of texture bitmaps? Not as bad since reuse of models 
-            IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
-            if (texturesDict != null)
+            ZipArchiveEntry entry = jar.GetEntry(MCResourcePack.AssetFolderPath + ModelFolderPath + modelFileName + ".json");
+            using (Stream s = entry.Open())
             {
-                foreach (KeyValuePair<string, JToken> kv in texturesDict)
+                using (StreamReader r = new StreamReader(s))
                 {
-                    string textureRef = kv.Value.ToString();
-                    if (textureRef.StartsWith("#"))
-                    {
-                        textureReferences.Add(kv.Key, textureRef);
-                    }
-                    else
-                    {
-                        textures.Add(kv.Key, new Bitmap(baseFolderName + TextureFolderPath + kv.Value.ToString().Replace("/", "\\") + ".png"));
-                    }
-                }
-            }
+                    JObject json = JObject.Parse(r.ReadToEnd());
 
-            //Load elements
-            JArray elementsJsonList = (JArray)json["elements"];
-            if (elementsJsonList != null)
-            {
-                foreach (JObject elementJson in elementsJsonList)
-                {
-                    elements.Add(new MCBlockElement(elementJson));
+                    //Load or reference parent model
+                    JToken parentToken = json.GetValue("parent");
+                    if (parentToken != null)
+                    {
+                        string parentFileName = parentToken.Value<string>().Replace("block/", "");
+                        parent = blockModels.FromFile(parentFileName);
+                    }
+
+                    //Load texture bitmaps
+                    //TODO: P3 lazy loading of texture bitmaps? Not as bad since reuse of models 
+                    IDictionary<string, JToken> texturesDict = (JObject)json["textures"];
+                    if (texturesDict != null)
+                    {
+                        foreach (KeyValuePair<string, JToken> kv in texturesDict)
+                        {
+                            string textureRef = kv.Value.ToString();
+                            if (textureRef.StartsWith("#"))
+                            {
+                                textureReferences.Add(kv.Key, textureRef);
+                            }
+                            else
+                            {
+                                ZipArchiveEntry textureEntry = jar.GetEntry(MCResourcePack.AssetFolderPath + TextureFolderPath + textureRef + ".png");
+                                using (Stream st = textureEntry.Open())
+                                {
+                                    using (MemoryStream mt = new MemoryStream())
+                                    {
+                                        st.CopyTo(mt);
+                                        textures.Add(kv.Key, new Bitmap(Image.FromStream(mt)));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //Load elements
+                    JArray elementsJsonList = (JArray)json["elements"];
+                    if (elementsJsonList != null)
+                    {
+                        foreach (JObject elementJson in elementsJsonList)
+                        {
+                            elements.Add(new MCBlockElement(elementJson));
+                        }
+                    }
                 }
             }
         }

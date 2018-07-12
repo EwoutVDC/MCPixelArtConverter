@@ -13,10 +13,9 @@ namespace MCPixelArtConverter
 {
     partial class MCPACMainForm : Form
     {
-        //TODO: P1 save/load baseFolderName to/from config json file?
-        //TODO: P1 use minecraft jar + resource pack folders instead of unzipped folders
-        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12\\1.12\\assets\\minecraft";
-        //string baseFolderName = "F:\\My Documents\\Minecraft\\1.12\\assets\\minecraft\\";
+        //TODO: P1 save/load baseFolderName to/from config json file? - use %appdata%/roaming/.minecraft/
+        string baseFolderName = "C:\\Users\\evandeca\\AppData\\Roaming\\.minecraft\\versions\\1.12";
+        //string baseFolderName = "C:\\Users\\Ewout\\AppData\\Roaming\\.minecraft\\versions\\1.12";
         MCResourcePack resourcePack = null;
         Bitmap image;
         Size scaledSize;
@@ -68,6 +67,7 @@ namespace MCPixelArtConverter
 
         private void LoadBlockInfoButton_Click(object sender, EventArgs e)
         {
+            //TODO: P1 Pick jar file instead of folder
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             if (!string.IsNullOrEmpty(baseFolderName))
                 folderBrowser.SelectedPath = baseFolderName;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,11 @@ namespace MCPixelArtConverter
 {
     class MCBlockModelCollection
     {
-        string baseFolderPath;
+        public ZipArchive jar { set; private get; }
         Dictionary<string, MCBlockModel> blockModels = new Dictionary<string, MCBlockModel>();
 
-        public MCBlockModelCollection(string baseFolderPath)
+        public MCBlockModelCollection()
         {
-            this.baseFolderPath = baseFolderPath;
         }
 
         public MCBlockModel FromFile(string fileName)
@@ -25,7 +25,7 @@ namespace MCPixelArtConverter
             }
             else
             {
-                model = new MCBlockModel(baseFolderPath, fileName, this);
+                model = new MCBlockModel(jar, fileName, this);
                 blockModels.Add(fileName, model);
                 return model;
             }
