@@ -14,6 +14,7 @@ namespace MCPixelArtConverter
     class MCBlockModel
     {
         const string ModelFolderPath = "models/block/";
+        const string ModelFolderPath_1_13 = "models/";
         const string TextureFolderPath = "textures/";
 
         //If a parent is set, that contains all elements. They can't be altered by children!
@@ -34,6 +35,11 @@ namespace MCPixelArtConverter
             Name = modelFileName;
 
             ZipArchiveEntry entry = jar.GetEntry(MCResourcePack.AssetFolderPath + ModelFolderPath + modelFileName + ".json");
+            if (entry == null)
+            {
+                //1.13 changed block model location
+                entry = jar.GetEntry(MCResourcePack.AssetFolderPath + ModelFolderPath_1_13 + modelFileName + ".json");
+            }
             using (Stream s = entry.Open())
             {
                 using (StreamReader r = new StreamReader(s))
