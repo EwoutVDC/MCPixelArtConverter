@@ -109,7 +109,8 @@ namespace MCPixelArtConverter
             RotateFlipType rotation;
             side = RotateSide(side, x, y, z, out rotation);
             Bitmap image = model.GetSideImage(side);
-            image.RotateFlip(rotation);
+            if (image != null)
+                image.RotateFlip(rotation);
             return image;
         }
     }

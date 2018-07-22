@@ -37,7 +37,9 @@ namespace MCPixelArtConverter
 
             foreach (MCBlockVariant variant in VariantsByName.Values)
             {
-                textures.Add(variant, variant.GetSideImage(facing));
+                Bitmap bitmap = variant.GetSideImage(facing);
+                if (bitmap != null)
+                    textures.Add(variant, bitmap);
             }
 
             return textures;
