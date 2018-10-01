@@ -23,7 +23,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -105,11 +105,11 @@
     <Compile Include="MCBlockVariant.cs" />
     <Compile Include="MCPoint.cs" />
     <Compile Include="MCResourcePack.cs" />
-    <Compile Include="MCPACImageForm.cs">
+    <Compile Include="ConversionResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MCPACImageForm.Designer.cs">
-      <DependentUpon>MCPACImageForm.cs</DependentUpon>
+    <Compile Include="ConversionResultForm.Designer.cs">
+      <DependentUpon>ConversionResultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PictureBoxWithSettings.cs">
       <SubType>Component</SubType>
@@ -119,8 +119,8 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MCPACImageForm.resx">
-      <DependentUpon>MCPACImageForm.cs</DependentUpon>
+    <EmbeddedResource Include="ConversionResultForm.resx">
+      <DependentUpon>ConversionResultForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MCPaletteForm.resx">
       <DependentUpon>MCPaletteForm.cs</DependentUpon>

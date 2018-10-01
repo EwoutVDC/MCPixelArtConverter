@@ -31,6 +31,9 @@ namespace MCPixelArtConverter
                 Console.WriteLine("Opened jar file " + jar);
                 if (blockModels == null)
                     blockModels = new MCBlockModelCollection();
+
+                //TODO P2: find a better way of sharing the jar file to where it is used.
+                //This member is only used during construction...
                 blockModels.jar = jar;
 
                 try

@@ -168,20 +168,9 @@ namespace MCPixelArtConverter
                 d.Reset(scaledSize);
             }
 
-            MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize, d);
+            MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize, d);            
 
-            Bitmap pixelArtImage = new Bitmap(scaledSize.Width * 16, scaledSize.Height * 16);
-            Graphics g = Graphics.FromImage(pixelArtImage);
-            for (int w = 0; w < scaledSize.Width; w++)
-            {
-                for (int h = 0; h < scaledSize.Height; h++)
-                {
-                    g.DrawImage(palette[blocks[w, h]], new Point(16 * w, 16 * h));
-                }
-            }
-
-            MCPACImageForm form = new MCPACImageForm();
-            form.SetImage(pixelArtImage);
+            ConversionResultForm form = new ConversionResultForm(blocks, palette);
             form.Show();
         }
 
