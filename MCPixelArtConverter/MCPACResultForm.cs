@@ -12,12 +12,12 @@ using System.Windows.Forms;
 namespace MCPixelArtConverter
 {
     //not public
-    partial class ConversionResultForm : Form
+    partial class MCPACResultForm : Form
     {
         MCBlockVariant[,] blocks;
         Dictionary<MCBlockVariant, Bitmap> palette;
 
-        public ConversionResultForm(MCBlockVariant[,] b, Dictionary<MCBlockVariant, Bitmap> p)
+        public MCPACResultForm(MCBlockVariant[,] b, Dictionary<MCBlockVariant, Bitmap> p)
         {
             InitializeComponent();
 

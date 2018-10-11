@@ -1,6 +1,6 @@
 ﻿namespace MCPixelArtConverter
 {
-    partial class ConversionResultForm
+    partial class MCPACResultForm
     {
         /// <summary>
         /// Required designer variable.
@@ -68,7 +68,7 @@
             this.btnExportToCsv.UseVisualStyleBackColor = true;
             this.btnExportToCsv.Click += new System.EventHandler(this.btnExportToCsv_Click);
             // 
-            // ConversionResultForm
+            // MCPACResultForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -76,8 +76,8 @@
             this.Controls.Add(this.btnExportToCsv);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "ConversionResultForm";
-            this.Text = "MC Pixel Art Converter Image";
+            this.Name = "MCPACResultForm";
+            this.Text = "MC Pixel Art Conversion Result";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

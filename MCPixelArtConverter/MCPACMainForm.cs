@@ -170,7 +170,7 @@ namespace MCPixelArtConverter
 
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize, d);            
 
-            ConversionResultForm form = new ConversionResultForm(blocks, palette);
+            MCPACResultForm form = new MCPACResultForm(blocks, palette);
             form.Show();
         }
 
@@ -189,7 +189,7 @@ namespace MCPixelArtConverter
             if (!CheckResourcePack())
                 return;
 
-            MCPaletteForm paletteForm = new MCPaletteForm(resourcePack);
+            MCPACBlockSelectionForm paletteForm = new MCPACBlockSelectionForm(resourcePack);
 
             paletteForm.Show();
         }

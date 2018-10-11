@@ -1,6 +1,6 @@
 ﻿namespace MCPixelArtConverter
 {
-    partial class MCPaletteForm
+    partial class MCPACBlockSelectionForm
     {
         /// <summary>
         /// Required designer variable.
@@ -135,7 +135,7 @@
             this.btnSelectAll.UseVisualStyleBackColor = true;
             this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
-            // MCPaletteForm
+            // MCPACBlockSelectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -149,8 +149,8 @@
             this.Controls.Add(this.checkedListBoxVariants);
             this.Controls.Add(this.textureImage);
             this.Controls.Add(this.checkedListBoxBlockStates);
-            this.Name = "MCPaletteForm";
-            this.Text = "MCPaletteForm";
+            this.Name = "MCPACBlockSelectionForm";
+            this.Text = "MC Pixel Art Block Selection";
             ((System.ComponentModel.ISupportInitialize)(this.textureImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

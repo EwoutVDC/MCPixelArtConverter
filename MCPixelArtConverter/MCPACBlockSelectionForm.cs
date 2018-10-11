@@ -11,11 +11,11 @@ using System.Windows.Forms;
 
 namespace MCPixelArtConverter
 {
-    partial class MCPaletteForm : Form
+    partial class MCPACBlockSelectionForm : Form
     {        
         MCResourcePack resourcePack;
 
-        public MCPaletteForm(MCResourcePack rp)
+        public MCPACBlockSelectionForm(MCResourcePack rp)
         {
             InitializeComponent();
 
