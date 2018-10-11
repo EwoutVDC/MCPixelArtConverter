@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MCPixelArtConverter
 {
-    //TODO: P4 add converter that matches each pixel of the block texture to the original image
+    //TODO: P4 add converter that matches each pixel of the block texture to a part of the original image (scaled down 16x less)
     //Average uses the average color of each block texture as one pixel
     class ImageConverterAverage : ImageConverter
     {
