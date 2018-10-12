@@ -19,10 +19,10 @@ MCPAC is written in C# and requires .NET 4.5.2. The installer should download th
 3. Set the target size by changing the width or height value or adjusting the scale slider. The image shown scale for the target resolution.
 4. Optionally select a dithering algorithm to apply. Dithering creates less sharp transitions and tries to mix available colors to more closely match the original image. Dithering disables multithreaded conversion since this requires the error from the previous block to convert the next block.
 5. Optionally select the minecraft blocks to be used by clicking the "Select blocks" button
-5.1. This will open a new window that allows you to select the block side that will be used and select which blocks (and variants) are to be used in the converted pixel art.
-5.2 You can save/load the block selection to/from a simple text file with the respective buttons
-5.3 You can leave this window open or close it after changing the block selection. The selection is immediately applied.
+    1. This will open a new window that allows you to select the block side that will be used and select which blocks (and variants) are to be used in the converted pixel art.
+    2. You can save/load the block selection to/from a simple text file with the respective buttons
+    3. You can leave this window open or close it after changing the block selection. The selection is immediately applied.
 6. Click "Convert Image". This will block the application while conversion is being done. Depending on target size and selected blocks, this can take some time. Please be patient. A progress bar and background conversion are potential future features.
-6.1. This will open a new window that shows an image of the converted pixel art using the selected minecraft blocks
-6.2. You can save this result as the image that is shown in this window by clicking "Save Image"
-6.3. You can also save the result as a CSV that lists all used blocks by text. This does not show the selected variant (orientation, state) of the block
+    1. This will open a new window that shows an image of the converted pixel art using the selected minecraft blocks
+    2. You can save this result as the image that is shown in this window by clicking "Save Image"
+    3. You can also save the result as a CSV that lists all used blocks by text. This does not show the selected variant (orientation, state) of the block
