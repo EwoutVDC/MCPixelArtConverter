@@ -57,21 +57,28 @@ namespace MCPixelArtConverter
                 return;
 
             StreamWriter exportFile;
-            //TODO P1 handle IOexceptions (ie cannot open because in use)
-            using (exportFile = new StreamWriter(saveFileDialog.FileName))
+            try
             {
-                for (int h = 0; h < blocks.GetLength(1); h++)
+                using (exportFile = new StreamWriter(saveFileDialog.FileName))
                 {
-                    if (h > 0)
-                        exportFile.Write("\n");
-                    for (int w = 0; w < blocks.GetLength(0); w++)
+                    for (int h = 0; h < blocks.GetLength(1); h++)
                     {
-                        if (w > 0)
-                            exportFile.Write(";");
-                        exportFile.Write(blocks[w, h].BlockState.ToString());
+                        if (h > 0)
+                            exportFile.Write("\n");
+                        for (int w = 0; w < blocks.GetLength(0); w++)
+                        {
+                            if (w > 0)
+                                exportFile.Write(";");
+                            exportFile.Write(blocks[w, h].BlockState.ToString());
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
     }
 }

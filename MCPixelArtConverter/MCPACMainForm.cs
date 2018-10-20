@@ -168,6 +168,7 @@ namespace MCPixelArtConverter
                 d.Reset(scaledSize);
             }
 
+            //TODO: P1 show progress bar somewhere
             MCBlockVariant[,] blocks = imageConverter.Convert(image, scaledSize, d);            
 
             MCPACResultForm form = new MCPACResultForm(blocks, palette);
