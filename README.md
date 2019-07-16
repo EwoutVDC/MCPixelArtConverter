@@ -10,6 +10,8 @@ The most important features are:
 * Export conversion result to image and CSV
 
 # How to install
+Download the latest release here: https://github.com/EwoutVDC/MCPixelArtConverter/releases
+
 Unzip the installer and execute setup.exe. The application should install to local appdata and create an entry in the start menu. You can remove the installer files afterwards.
 MCPAC is written in C# and requires .NET 4.5.2. The installer should download this if required.
 
