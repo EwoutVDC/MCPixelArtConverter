@@ -30,7 +30,7 @@ namespace MCPixelArtConverter
             {
                 using (ZipArchive jar = ZipFile.Open(filePath, ZipArchiveMode.Read))
                 {
-                    Console.WriteLine("Opened jar file " + jar);
+                    Console.WriteLine("Opened jar file " + filePath);
                     if (blockModels == null)
                         blockModels = new MCBlockModelCollection();
 
@@ -59,7 +59,7 @@ namespace MCPixelArtConverter
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception while loading minecraft .jar:\n"+ex.Message);
+                MessageBox.Show("Exception while loading minecraft .jar:\n"+ex.ToString());
             }
         }
 

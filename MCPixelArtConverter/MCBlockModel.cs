@@ -14,7 +14,7 @@ namespace MCPixelArtConverter
     class MCBlockModel
     {
         const string ModelFolderPath = "models/block/";
-        const string ModelFolderPath_1_13 = "models/";
+        const string ModelFolderPath_1_13 = "models/"; //1.13 changed base folder for references
         const string TextureFolderPath = "textures/";
 
         //If a parent is set, that contains all elements. They can't be altered by children!
@@ -34,11 +34,18 @@ namespace MCPixelArtConverter
         {
             Name = modelFileName;
 
+            modelFileName = modelFileName.Replace("minecraft:", ""); //Since 1.16, references start with 'minecraft:'
+
             ZipArchiveEntry entry = jar.GetEntry(MCResourcePack.AssetFolderPath + ModelFolderPath + modelFileName + ".json");
             if (entry == null)
             {
                 //1.13 changed block model location
                 entry = jar.GetEntry(MCResourcePack.AssetFolderPath + ModelFolderPath_1_13 + modelFileName + ".json");
+            }
+            if (entry == null)
+            {
+                Console.WriteLine("Could not open entry for Name " + Name + " modelFileName " + modelFileName);
+                throw new Exception("Could not open entry for Name " + Name + " modelFileName " + modelFileName) ;
             }
             using (Stream s = entry.Open())
             {
@@ -50,7 +57,7 @@ namespace MCPixelArtConverter
                     JToken parentToken = json.GetValue("parent");
                     if (parentToken != null)
                     {
-                        string parentFileName = parentToken.Value<string>().Replace("block/", "");
+                        string parentFileName = parentToken.Value<string>();
                         parent = blockModels.FromFile(parentFileName);
                     }
 
@@ -68,6 +75,7 @@ namespace MCPixelArtConverter
                             }
                             else
                             {
+                                textureRef = textureRef.Replace("minecraft:", ""); // Since 1.16 some references start with "minecraft:"
                                 ZipArchiveEntry textureEntry = jar.GetEntry(MCResourcePack.AssetFolderPath + TextureFolderPath + textureRef + ".png");
                                 using (Stream st = textureEntry.Open())
                                 {
