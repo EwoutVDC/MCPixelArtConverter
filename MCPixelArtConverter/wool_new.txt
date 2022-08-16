@@ -1,0 +1,16 @@
+magenta_wool	
+cyan_wool	
+light_blue_wool	
+purple_wool	
+yellow_wool	
+green_wool	
+orange_wool	
+red_wool	
+lime_wool	
+blue_wool	
+white_wool	
+light_gray_wool	
+brown_wool	
+black_wool	
+pink_wool	
+gray_wool	

@@ -9,11 +9,13 @@ The most important features are:
 * Optionally apply selected dithering algorithm. This works best for pictures and/or bigger pixel arts with fine detail
 * Export conversion result to image and CSV
 
+The latest tested minecraft version is 1.19.2
+
 # How to install
 Download the latest release here: https://github.com/EwoutVDC/MCPixelArtConverter/releases
 
 Unzip the installer and execute setup.exe. The application should install to local appdata and create an entry in the start menu. You can remove the installer files afterwards.
-MCPAC is written in C# and requires .NET 4.5.2. The installer should download this if required.
+MCPAC is written in C# and requires .NET 4.8. The installer should download this if required.
 
 # How to use
 1. Click "Load block info" and point to the Minecraft .jar file you will be using.

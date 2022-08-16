@@ -47,6 +47,8 @@ namespace MCPixelArtConverter
 
         public Bitmap GetBitmap(Dictionary<string, Bitmap> textures, Dictionary<string, string> textureReferences)
         {
+            if (UMin == UMax || VMin == VMax)
+                return null; // This is an empty slice. Width or heigth 0
             return FindBitmap(TextureName, textures, textureReferences);
         }
 

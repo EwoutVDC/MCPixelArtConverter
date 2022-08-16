@@ -12,6 +12,7 @@ namespace MCPixelArtConverter
     {
         MCPoint from, to;
         Dictionary<Sides, MCElementFace> faces = new Dictionary<Sides, MCElementFace>();
+        //TODO P1 element rotation not taken into account
 
         /*
         "elements": [
