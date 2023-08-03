@@ -94,9 +94,14 @@ namespace MCPixelArtConverter
         private void UpdateBlockVariants(MCBlockState definedState = null)
         {
             checkedListBoxVariants.Items.Clear();
-            MCBlockState blockState = (MCBlockState)((DataRowView)checkedListBoxBlockStates.SelectedItem)["BlockState"];
+            MCBlockState blockState = null;
             if (definedState != null)
                 blockState = definedState;
+            else
+            {
+                if(checkedListBoxBlockStates.SelectedItem != null)
+                    blockState = (MCBlockState)((DataRowView)checkedListBoxBlockStates.SelectedItem)["BlockState"];
+            }
             if (blockState == null)
                 return;
 
@@ -264,14 +269,16 @@ namespace MCPixelArtConverter
         
         private void checkedListBoxBlockStates_BindingContext_CurrentChanged(object sender, EventArgs e)
         {
-            MCBlockState blockState =
-                ((MCBlockState)(
+            MCBlockState blockState = null;
+            if (((CurrencyManager)sender).List.Count > 0)
+            {
+                blockState = ((MCBlockState)(
                     (DataRowView)
                         (
                             (CurrencyManager)sender
                         ).Current
                 )["BlockState"]);
-
+            }
             UpdateBlockVariants(blockState);
         }
 
