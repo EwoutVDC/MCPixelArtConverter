@@ -49,6 +49,18 @@ namespace MCPixelArtConverter
             Bitmap scaledImage = new Bitmap(image, size);
 
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
+            
+            // Reduce our dictionary of averageColors to include only colors that are currently selected.
+            ConcurrentDictionary<MCBlockVariant, ColorDouble> tempColors = new ConcurrentDictionary<MCBlockVariant, ColorDouble>();
+            foreach (KeyValuePair<MCBlockVariant, ColorDouble> variantColor in averageColors) {
+                if(variantColor.Key.Selected)
+                {
+                    if(!tempColors.TryAdd(variantColor.Key, variantColor.Value))
+                    {
+                        Console.Error.WriteLine("Could not add average color for" + variantColor.Key);
+                    }
+                }
+            }
 
             if (ditherer == null)
             {
@@ -65,7 +77,7 @@ namespace MCPixelArtConverter
                     }
                     for (int h = 0; h < size.Height; h++)
                     {
-                        blocks[w, h] = GetBestVariant(scaledImageClone.GetPixel(0, h));
+                        blocks[w, h] = GetBestVariant(tempColors, scaledImageClone.GetPixel(0, h));
                     }
                 }
                 );
@@ -79,7 +91,7 @@ namespace MCPixelArtConverter
                     for (int w = 0; w < scaledImage.Width; w++)
                     {
                         ColorDouble errorColor;
-                        blocks[w, h] = GetBestVariantWithError(scaledImage.GetPixel(w, h),
+                        blocks[w, h] = GetBestVariantWithError(tempColors, scaledImage.GetPixel(w, h),
                                                                ditherer.GetColorOffset(w,h),
                                                                out errorColor);
                         ditherer.ApplyError(w, h, errorColor);
@@ -91,7 +103,8 @@ namespace MCPixelArtConverter
             return blocks;
         }
         
-        MCBlockVariant GetBestVariantWithError(Color targetColor,
+        MCBlockVariant GetBestVariantWithError(ConcurrentDictionary<MCBlockVariant, ColorDouble> averageColors,
+                                               Color targetColor,
                                                ColorDouble colorOffset,
                                                out ColorDouble errorColor)
         {
@@ -117,7 +130,7 @@ namespace MCPixelArtConverter
             return bestVariant;
         }
         
-        MCBlockVariant GetBestVariant(Color pixel)
+        MCBlockVariant GetBestVariant(ConcurrentDictionary<MCBlockVariant, ColorDouble> averageColors, Color pixel)
         {
             Double minDiffScore = Double.MaxValue;
             MCBlockVariant bestVariant = null;
