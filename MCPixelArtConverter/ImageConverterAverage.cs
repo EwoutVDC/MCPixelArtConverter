@@ -68,7 +68,7 @@ namespace MCPixelArtConverter
                     }
                     for (int h = 0; h < size.Height; h++)
                     {
-                        blocks[w, h] = GetBestVariant(averageColors, scaledImageClone.GetPixel(0, h));
+                        blocks[w, h] = GetBestVariant(scaledImageClone.GetPixel(0, h));
                     }
                 }
                 );
@@ -82,7 +82,7 @@ namespace MCPixelArtConverter
                     for (int w = 0; w < scaledImage.Width; w++)
                     {
                         ColorDouble errorColor;
-                        blocks[w, h] = GetBestVariantWithError(averageColors, scaledImage.GetPixel(w, h),
+                        blocks[w, h] = GetBestVariantWithError(scaledImage.GetPixel(w, h),
                                                                ditherer.GetColorOffset(w,h),
                                                                out errorColor);
                         ditherer.ApplyError(w, h, errorColor);
@@ -94,8 +94,7 @@ namespace MCPixelArtConverter
             return blocks;
         }
         
-        MCBlockVariant GetBestVariantWithError(ConcurrentDictionary<MCBlockVariant, ColorDouble> averageColors,
-                                               Color targetColor,
+        MCBlockVariant GetBestVariantWithError(Color targetColor,
                                                ColorDouble colorOffset,
                                                out ColorDouble errorColor)
         {
@@ -121,7 +120,7 @@ namespace MCPixelArtConverter
             return bestVariant;
         }
         
-        MCBlockVariant GetBestVariant(ConcurrentDictionary<MCBlockVariant, ColorDouble> averageColors, Color pixel)
+        MCBlockVariant GetBestVariant(Color pixel)
         {
             Double minDiffScore = Double.MaxValue;
             MCBlockVariant bestVariant = null;
