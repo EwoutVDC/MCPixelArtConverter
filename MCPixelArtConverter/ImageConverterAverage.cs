@@ -19,29 +19,29 @@ namespace MCPixelArtConverter
         {
             Parallel.ForEach(palette, kv =>
             {
-                if (kv.Key.Selected)
+                if (!kv.Key.Selected)
+                    return;
+
+                ColorDouble averageColor = new ColorDouble(0, 0, 0, 0);
+                Bitmap bm = kv.Value;
+                if (bm == null)
+                    return;
+
+                for (int w = 0; w < bm.Width; w++)
                 {
-                    ColorDouble averageColor = new ColorDouble(0, 0, 0, 0);
-                    Bitmap bm = kv.Value;
-                    if (bm == null)
-                        return;
-
-                    for (int w = 0; w < bm.Width; w++)
+                    for (int h = 0; h < bm.Height; h++)
                     {
-                        for (int h = 0; h < bm.Height; h++)
-                        {
-                            averageColor += new ColorDouble(bm.GetPixel(w, h).A,
-                                                            bm.GetPixel(w, h).R,
-                                                            bm.GetPixel(w, h).G,
-                                                            bm.GetPixel(w, h).B);
-                        }
+                        averageColor += new ColorDouble(bm.GetPixel(w, h).A,
+                                                        bm.GetPixel(w, h).R,
+                                                        bm.GetPixel(w, h).G,
+                                                        bm.GetPixel(w, h).B);
                     }
-
-                    averageColor /= bm.Width * bm.Height;
-
-                    if (!averageColors.TryAdd(kv.Key, averageColor))
-                        Console.Error.WriteLine("Could not add average color for" + kv.Key);
                 }
+
+                averageColor /= bm.Width * bm.Height;
+
+                if (!averageColors.TryAdd(kv.Key, averageColor))
+                    Console.Error.WriteLine("Could not add average color for" + kv.Key);
             }
             );
         }
