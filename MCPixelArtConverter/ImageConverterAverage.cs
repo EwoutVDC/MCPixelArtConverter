@@ -19,26 +19,29 @@ namespace MCPixelArtConverter
         {
             Parallel.ForEach(palette, kv =>
             {
-                ColorDouble averageColor = new ColorDouble(0, 0, 0, 0);
-                Bitmap bm = kv.Value;
-                if (bm == null)
-                    return;
-
-                for (int w = 0; w < bm.Width; w++)
+                if (kv.Key.Selected)
                 {
-                    for (int h = 0; h < bm.Height; h++)
-                    {
-                        averageColor += new ColorDouble(bm.GetPixel(w, h).A,
-                                                        bm.GetPixel(w, h).R,
-                                                        bm.GetPixel(w, h).G,
-                                                        bm.GetPixel(w, h).B);
-                    }
-                }
+                    ColorDouble averageColor = new ColorDouble(0, 0, 0, 0);
+                    Bitmap bm = kv.Value;
+                    if (bm == null)
+                        return;
 
-                averageColor /= bm.Width * bm.Height;
-                
-                if (!averageColors.TryAdd(kv.Key, averageColor))
-                    Console.Error.WriteLine("Could not add average color for" + kv.Key);
+                    for (int w = 0; w < bm.Width; w++)
+                    {
+                        for (int h = 0; h < bm.Height; h++)
+                        {
+                            averageColor += new ColorDouble(bm.GetPixel(w, h).A,
+                                                            bm.GetPixel(w, h).R,
+                                                            bm.GetPixel(w, h).G,
+                                                            bm.GetPixel(w, h).B);
+                        }
+                    }
+
+                    averageColor /= bm.Width * bm.Height;
+
+                    if (!averageColors.TryAdd(kv.Key, averageColor))
+                        Console.Error.WriteLine("Could not add average color for" + kv.Key);
+                }
             }
             );
         }
@@ -50,18 +53,6 @@ namespace MCPixelArtConverter
 
             MCBlockVariant[,] blocks = new MCBlockVariant[size.Width, size.Height];
             
-            // Reduce our dictionary of averageColors to include only colors that are currently selected.
-            ConcurrentDictionary<MCBlockVariant, ColorDouble> tempColors = new ConcurrentDictionary<MCBlockVariant, ColorDouble>();
-            foreach (KeyValuePair<MCBlockVariant, ColorDouble> variantColor in averageColors) {
-                if(variantColor.Key.Selected)
-                {
-                    if(!tempColors.TryAdd(variantColor.Key, variantColor.Value))
-                    {
-                        Console.Error.WriteLine("Could not add average color for" + variantColor.Key);
-                    }
-                }
-            }
-
             if (ditherer == null)
             {
                 //without dithering, parallel processing is easier since there is no dependency on previously
@@ -77,7 +68,7 @@ namespace MCPixelArtConverter
                     }
                     for (int h = 0; h < size.Height; h++)
                     {
-                        blocks[w, h] = GetBestVariant(tempColors, scaledImageClone.GetPixel(0, h));
+                        blocks[w, h] = GetBestVariant(averageColors, scaledImageClone.GetPixel(0, h));
                     }
                 }
                 );
@@ -91,7 +82,7 @@ namespace MCPixelArtConverter
                     for (int w = 0; w < scaledImage.Width; w++)
                     {
                         ColorDouble errorColor;
-                        blocks[w, h] = GetBestVariantWithError(tempColors, scaledImage.GetPixel(w, h),
+                        blocks[w, h] = GetBestVariantWithError(averageColors, scaledImage.GetPixel(w, h),
                                                                ditherer.GetColorOffset(w,h),
                                                                out errorColor);
                         ditherer.ApplyError(w, h, errorColor);
@@ -136,9 +127,6 @@ namespace MCPixelArtConverter
             MCBlockVariant bestVariant = null;
             foreach (KeyValuePair<MCBlockVariant, ColorDouble> variantColor in averageColors)
             {
-                if (!variantColor.Key.Selected)
-                    continue;
-
                 ColorDouble c = variantColor.Value;
                 Double diff = Math.Pow(pixel.A - c.A, 2) + 
                               Math.Pow(pixel.R - c.R, 2) +
